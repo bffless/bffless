@@ -58,7 +58,7 @@ export default function WorkflowSection() {
               <code className="font-mono text-terracotta">production</code> when it's ready.
             </p>
           </div>
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 min-w-0">
             <pre className="border border-ink bg-ink text-paper p-6 md:p-7 overflow-x-auto text-[13px] leading-[1.7] font-mono">
               <code>{ghaSnippet}</code>
             </pre>
