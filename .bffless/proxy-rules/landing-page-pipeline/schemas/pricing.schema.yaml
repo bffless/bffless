@@ -1,0 +1,21 @@
+id: b68b21de-b280-43fc-bda1-df9e5016368a
+name: pricing
+fields:
+  - name: name
+    type: string
+    required: true
+  - name: email
+    type: email
+    required: true
+  - name: company
+    type: string
+    required: false
+  - name: message
+    type: string
+    required: false
+  - name: planType
+    type: string
+    required: false
+  - name: source
+    type: string
+    required: false

@@ -1,0 +1,36 @@
+id: 754c5f36-584c-4247-a0d6-6e1f4b98aaa6
+name: developer_reviews
+fields:
+  - name: rating
+    type: number
+    required: true
+  - name: name
+    type: string
+    required: false
+  - name: email
+    type: email
+    required: false
+  - name: github_handle
+    type: string
+    required: false
+  - name: role
+    type: string
+    required: false
+  - name: company
+    type: string
+    required: false
+  - name: review
+    type: text
+    required: true
+  - name: use_case
+    type: string
+    required: false
+  - name: visible
+    type: boolean
+    required: false
+  - name: permission_to_display
+    type: boolean
+    required: false
+  - name: source
+    type: string
+    required: false

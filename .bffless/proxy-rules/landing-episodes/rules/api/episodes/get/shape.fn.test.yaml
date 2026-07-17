@@ -1,0 +1,200 @@
+handler: ./shape.fn.js
+cases:
+  - name: parses number from title, strips prefix, sorts newest first
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              - snippet:
+                  title: "1. Anatomy of A Website: How BFFless works"
+                  resourceId: { videoId: "luQMEUYzsUQ" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/luQMEUYzsUQ/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "luQMEUYzsUQ"
+                  videoPublishedAt: "2026-05-24T16:22:20Z"
+              - snippet:
+                  title: "24. Build a Contact Form Using BFFless Rules as Code"
+                  resourceId: { videoId: "I8ENnwXd4dg" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/I8ENnwXd4dg/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "I8ENnwXd4dg"
+                  videoPublishedAt: "2026-07-15T11:35:42Z"
+    expect:
+      result:
+        count: 2
+        episodes:
+          - id: "I8ENnwXd4dg"
+            ep: "24"
+            title: "Build a Contact Form Using BFFless Rules as Code"
+            publishedAt: "2026-07-15T11:35:42Z"
+          - id: "luQMEUYzsUQ"
+            ep: "01"
+            title: "Anatomy of A Website: How BFFless works"
+            publishedAt: "2026-05-24T16:22:20Z"
+
+  - name: regression guard - ignores snippet.position even when it would invert the result
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              # Newest video (highest title number) sits at position 0, exactly as
+              # the live playlist does. If position were still used to derive ep
+              # (position + 1) and to sort, this video would wrongly become "01"
+              # and would sort AFTER the older video below.
+              - snippet:
+                  position: 0
+                  title: "10. Newest Episode"
+                  resourceId: { videoId: "aaaaaaaaaa1" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/aaaaaaaaaa1/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "aaaaaaaaaa1"
+                  videoPublishedAt: "2026-07-10T00:00:00Z"
+              - snippet:
+                  position: 1
+                  title: "2. Older Episode"
+                  resourceId: { videoId: "bbbbbbbbbb1" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/bbbbbbbbbb1/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "bbbbbbbbbb1"
+                  videoPublishedAt: "2026-06-01T00:00:00Z"
+    expect:
+      result:
+        count: 2
+        episodes:
+          - id: "aaaaaaaaaa1"
+            ep: "10"
+            title: "Newest Episode"
+            publishedAt: "2026-07-10T00:00:00Z"
+          - id: "bbbbbbbbbb1"
+            ep: "02"
+            title: "Older Episode"
+            publishedAt: "2026-06-01T00:00:00Z"
+
+  - name: drops private and deleted videos even with populated thumbnails
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              - snippet:
+                  title: "3. Real Episode"
+                  resourceId: { videoId: "ccccccccccc" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/ccccccccccc/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "ccccccccccc"
+                  videoPublishedAt: "2026-07-01T00:00:00Z"
+              - snippet:
+                  title: "Private video"
+                  resourceId: { videoId: "ddddddddddd" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/ddddddddddd/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "ddddddddddd"
+    expect:
+      result:
+        count: 1
+        episodes:
+          - id: "ccccccccccc"
+            ep: "03"
+            title: "Real Episode"
+            publishedAt: "2026-07-01T00:00:00Z"
+
+  - name: keeps a freshly-published video whose thumbnails have not propagated
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              - snippet:
+                  title: "15. Fresh Drop"
+                  resourceId: { videoId: "fffffffffff" }
+                  thumbnails: {}
+                contentDetails:
+                  videoId: "fffffffffff"
+                  videoPublishedAt: "2026-07-16T00:00:00Z"
+    expect:
+      result:
+        count: 1
+        episodes:
+          - id: "fffffffffff"
+            ep: "15"
+            title: "Fresh Drop"
+            publishedAt: "2026-07-16T00:00:00Z"
+
+  - name: drops an item whose title has no leading number
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              - snippet:
+                  title: "Special Bonus Episode"
+                  resourceId: { videoId: "ggggggggggg" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/ggggggggggg/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "ggggggggggg"
+                  videoPublishedAt: "2026-07-10T00:00:00Z"
+              - snippet:
+                  title: "4. Real One"
+                  resourceId: { videoId: "hhhhhhhhhhh" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/hhhhhhhhhhh/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "hhhhhhhhhhh"
+                  videoPublishedAt: "2026-07-11T00:00:00Z"
+    expect:
+      result:
+        count: 1
+        episodes:
+          - id: "hhhhhhhhhhh"
+            ep: "04"
+            title: "Real One"
+            publishedAt: "2026-07-11T00:00:00Z"
+
+  - name: returns empty list when upstream failed
+    data:
+      steps:
+        fetch_playlist: { ok: false, status: 403, body: {} }
+    expect:
+      result: { count: 0, episodes: [] }
+
+  - name: returns empty list when body has no items
+    data:
+      steps:
+        fetch_playlist: { ok: true, status: 200, body: {} }
+    expect:
+      result: { count: 0, episodes: [] }
+
+  - name: zero-pads single-digit episode numbers
+    data:
+      steps:
+        fetch_playlist:
+          ok: true
+          status: 200
+          body:
+            items:
+              - snippet:
+                  title: "9. Something"
+                  resourceId: { videoId: "iiiiiiiiiii" }
+                  thumbnails: { high: { url: "https://i.ytimg.com/vi/iiiiiiiiiii/hqdefault.jpg" } }
+                contentDetails:
+                  videoId: "iiiiiiiiiii"
+                  videoPublishedAt: "2026-06-01T00:00:00Z"
+    expect:
+      result:
+        count: 1
+        episodes:
+          - id: "iiiiiiiiiii"
+            ep: "09"
+            title: "Something"
+            publishedAt: "2026-06-01T00:00:00Z"

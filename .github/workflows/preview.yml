@@ -1,0 +1,77 @@
+name: Preview on BFFless
+
+# PR previews for the landing site. Each PR gets its own preview: per-PR
+# copies of every authored rule set (landing-episodes-pr-<N>,
+# landing-page-pipeline-pr-<N>) synced from the authored layout with a
+# pr-<N> name suffix, and a per-PR alias (landing-pr-<N>) that both sets
+# are attached to — mirroring what landing-production serves.
+# cleanup-preview.yml tears them all down when the PR closes.
+#
+# This workflow is pull_request-only (no workflow_dispatch) by design: it means
+# github.event.pull_request.number is always set, so the PR number can be used
+# directly inline below and a manual run can never push its rules onto the LIVE
+# `landing-episodes` set via a missing name suffix.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build landing site
+        run: pnpm build
+
+      - name: Sync PR preview proxy rules
+        uses: bffless/deploy-proxy-rules@v1
+        with:
+          path: |
+            .bffless/proxy-rules/landing-episodes
+            .bffless/proxy-rules/landing-page-pipeline
+          api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
+          api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          project: bffless/platform
+          prune: true   # match production, so the preview reflects what merging will do
+          name-suffix: pr-${{ github.event.pull_request.number }}
+          summary-title: Landing Preview Proxy Rules
+          pr-comment: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy preview to BFFless
+        uses: bffless/upload-artifact@v1
+        with:
+          path: dist
+          api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
+          api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          repository: bffless/platform
+          alias: landing-pr-${{ github.event.pull_request.number }}
+          proxy-rule-set-names: landing-episodes-pr-${{ github.event.pull_request.number }},landing-page-pipeline-pr-${{ github.event.pull_request.number }}
+          description: 'Landing preview for PR #${{ github.event.pull_request.number }}'
+          summary-title: Landing Preview
+          pr-comment: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

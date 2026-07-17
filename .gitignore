@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+
+# Editor / tooling caches
+.impeccable
+*.tsbuildinfo

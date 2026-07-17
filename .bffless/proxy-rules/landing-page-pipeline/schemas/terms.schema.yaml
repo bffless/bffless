@@ -1,0 +1,12 @@
+id: 196c3917-f84b-4a3d-9df1-7b82c2696081
+name: terms
+fields:
+  - name: name
+    type: string
+    required: true
+  - name: email
+    type: string
+    required: true
+  - name: message
+    type: string
+    required: true

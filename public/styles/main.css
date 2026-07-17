@@ -1,0 +1,169 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #FAF8F5;
+  min-height: 100vh;
+  color: #3a3a3a;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 3rem 0 2rem;
+}
+
+.hero {
+  max-width: 560px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(58, 58, 58, 0.1);
+}
+
+/* Info Section - 2 column layout */
+.info-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 560px;
+}
+
+.logo-col {
+  flex: 0 0 33.333%;
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+.content-col {
+  flex: 1;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #3a3a3a;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: #6b6560;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.link-btn {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.link-btn:hover {
+  background: #2a2a2a;
+}
+
+.link-btn-secondary {
+  background: transparent;
+  color: #3a3a3a;
+  border: 1px solid #d1ccc4;
+}
+
+.link-btn-secondary:hover {
+  background: #ede8dd;
+  border-color: #c4bfb7;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid #ede8dd;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+footer p {
+  color: #a09a92;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .hero {
+    border-radius: 12px;
+  }
+
+  .info-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .logo-col {
+    flex: none;
+  }
+
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .links {
+    justify-content: center;
+  }
+}

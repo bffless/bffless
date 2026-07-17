@@ -1,0 +1,42 @@
+id: 4bd99ab3-d6cc-406d-a93a-3f589c534751
+name: install_telemetry
+fields:
+  - name: install_id
+    type: string
+    required: true
+  - name: event
+    type: string
+    required: false
+  - name: version
+    type: string
+    required: false
+  - name: os
+    type: string
+    required: false
+  - name: arch
+    type: string
+    required: false
+  - name: node_version
+    type: string
+    required: false
+  - name: storage_provider
+    type: string
+    required: false
+  - name: deployment_mode
+    type: string
+    required: false
+  - name: project_count_bucket
+    type: string
+    required: false
+  - name: deployment_count_bucket
+    type: string
+    required: false
+  - name: user_count_bucket
+    type: string
+    required: false
+  - name: ip
+    type: string
+    required: false
+  - name: user_agent
+    type: string
+    required: false

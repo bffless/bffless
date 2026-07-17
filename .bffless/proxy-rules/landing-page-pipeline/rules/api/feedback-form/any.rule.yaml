@@ -1,0 +1,84 @@
+targetUrl: ""
+order: 1
+pipeline:
+  name: Feedback form handler
+  description: handles feedback form
+  steps:
+    - id: step_1772983497625_5c3075j
+      name: form_validation
+      handler: form_handler
+      config:
+        fields:
+          message:
+            type: string
+            required: true
+        honeypotField: website
+      isEnabled: true
+    - id: step_1772983535422_ycvobml
+      name: create record
+      handler: data_create
+      config:
+        fields:
+          name: request.body.name
+          email: request.body.email
+          source: request.body.source
+          message: request.body.message
+          category: request.body.category
+        schemaId: $schema:feedback
+      isEnabled: true
+    - id: step_1772983588975_yjtqyeu
+      name: send email
+      handler: email_handler
+      config:
+        to: toshimoto821@proton.me
+        body: |-
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+              .field { margin-bottom: 15px; }
+              .label { font-weight: 600; color: #555; }
+              .value { margin-top: 5px; }
+              .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 12px; color: #888; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>New Feedback Submission</h2>
+              </div>
+
+              <div class="field">
+                <div class="label">Name</div>
+                <div class="value">{{request.body.name}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Email</div>
+                <div class="value">{{request.body.email}}</div>
+              </div>
+              <div class="field">
+                <div class="label">Category</div>
+                <div class="value">{{request.body.category}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Message</div>
+                <div class="value">{{request.body.message}}</div>
+              </div>
+
+              <div class="footer">
+                Submitted on {{metadata.path}} via {{metadata.method}}
+              </div>
+            </div>
+          </body>
+          </html>
+        subject: New Feedback Submission from {{ request.body.name }}
+      isEnabled: true
+# Debug snapshots stay off in production: they are captured on every request and the
+# backend runs under a 128MB heap cap, which is what drove the OOM crash loop. Enable
+# locally or on a PR preview instead of here.
+debugEnabled: false

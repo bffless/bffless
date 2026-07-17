@@ -1,0 +1,89 @@
+targetUrl: ""
+order: 0
+pipeline:
+  name: pricing form
+  description: handles pricing form requests
+  steps:
+    - id: step_1772982854197_2xps0fv
+      name: form_validation
+      handler: form_handler
+      config:
+        fields:
+          name:
+            type: string
+            required: true
+          email:
+            type: email
+            required: true
+      isEnabled: true
+    - id: step_1772982904298_tqygrj2
+      name: create record
+      handler: data_create
+      config:
+        fields:
+          name: input.name
+          email: input.email
+          source: input.source
+          company: input.company
+          message: input.message
+          planType: input.planType
+        schemaId: $schema:pricing
+      isEnabled: true
+    - id: step_1772982979445_aso40a2
+      name: send email
+      handler: email_handler
+      config:
+        to: toshimoto821@proton.me
+        body: |-
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+              .field { margin-bottom: 15px; }
+              .label { font-weight: 600; color: #555; }
+              .value { margin-top: 5px; }
+              .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 12px; color: #888; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>New Pricing Form Submission</h2>
+              </div>
+
+              <div class="field">
+                <div class="label">Name</div>
+                <div class="value">{{input.name}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Email</div>
+                <div class="value">{{input.email}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Company</div>
+                <div class="value">{{input.company}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Plan Type</div>
+                <div class="value">{{input.planType}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Message</div>
+                <div class="value">{{input.message}}</div>
+              </div>
+
+              <div class="footer">
+                Submitted on {{metadata.path}} via {{metadata.method}}
+              </div>
+            </div>
+          </body>
+          </html>
+        subject: New Pricing Form Submission from {{ input.name }}
+      isEnabled: true

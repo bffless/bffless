@@ -1,0 +1,57 @@
+targetUrl: pipeline
+order: 11
+pipeline:
+  name: install_telemetry_stats
+  description: GET aggregated install telemetry for the admin dashboard. Requires an authenticated admin session.
+  steps:
+    - id: gate
+      name: gate
+      handler: function_handler
+      code: ./gate.fn.js
+    - id: denied
+      name: denied
+      handler: response_handler
+      config:
+        body: '{ "error": "admin_only" }'
+        status: 403
+        condition: steps.gate.notAdmin
+        contentType: application/json
+    - id: telemetry
+      name: telemetry
+      handler: data_query
+      config:
+        pageSize: 1000
+        schemaId: $schema:install_telemetry
+        condition: steps.gate.isAdmin
+    - id: downloads
+      name: downloads
+      handler: data_query
+      config:
+        pageSize: 1000
+        schemaId: $schema:install_downloads
+        condition: steps.gate.isAdmin
+    - id: views
+      name: views
+      handler: data_query
+      config:
+        pageSize: 1000
+        schemaId: $schema:install_views
+        condition: steps.gate.isAdmin
+    - id: aggregate
+      name: aggregate
+      handler: function_handler
+      code: ./aggregate.fn.js
+      config:
+        condition: steps.gate.isAdmin
+    - id: respond
+      name: respond
+      handler: response_handler
+      config:
+        body: "{{{steps.aggregate}}}"
+        status: 200
+        condition: steps.gate.isAdmin
+        contentType: application/json
+  validators:
+    - type: auth_required
+      config: {}
+description: Admin-only install telemetry dashboard stats. auth_required + role gate, aggregates install_telemetry / install_downloads / install_views into headline metrics, breakdowns, and recent heartbeats.

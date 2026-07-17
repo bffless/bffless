@@ -1,0 +1,41 @@
+description: Serves the YouTube Docs playlist as the landing hero episode list.
+timeout: 15000
+pipeline:
+  name: landing_episodes
+  description: >-
+    fetch_playlist (failOnError:false) -> shape maps/filters/sorts newest-first ->
+    respond serves JSON with a 1h cache, or 503 if YouTube failed.
+  steps:
+    - name: fetch_playlist
+      handler: http_request
+      config:
+        url: https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=PLOZmbA5xkvifCLijuP-DQ1WaDKi5bgoqh
+        method: GET
+        timeout: 10000
+        failOnError: false
+        headers:
+          X-Goog-Api-Key: secrets.YOUTUBE_API_KEY
+
+    - name: shape
+      handler: function_handler
+      code: shape.fn.js
+
+    - name: unavailable
+      handler: response_handler
+      config:
+        condition: "!steps.fetch_playlist.ok"
+        status: 503
+        contentType: application/json
+        body: '{ "error": "playlist_unavailable" }'
+        headers:
+          Cache-Control: "public, max-age=60"
+
+    - name: respond
+      handler: response_handler
+      config:
+        condition: steps.fetch_playlist.ok
+        status: 200
+        contentType: application/json
+        body: "{{{steps.shape.episodes}}}"
+        headers:
+          Cache-Control: "public, max-age=3600, stale-while-revalidate=86400, stale-if-error=604800"

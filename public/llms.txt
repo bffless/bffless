@@ -1,0 +1,134 @@
+# BFFless
+
+> The home for your AI-generated apps, internal tools, and HTML docs — with a backend, auth, and a path to your internal services. Self-hosted, open source.
+
+## Overview
+
+BFFless is a self-hosted, open-source platform that gives static frontends real backend capabilities. It's the home for the apps, internal tools, and HTML docs your team (and your AI coding agents) generate — somewhere they can actually live, with a backend and access control, behind your corporate boundary. It provides the infrastructure typically built into managed platforms - but you own and control everything. Technical framing for those who know the category: a self-hosted Supabase/Appwrite aimed at static sites and internal apps.
+
+- Website: https://bffless.app
+- Documentation: https://docs.bffless.app
+- Full LLM Documentation: https://docs.bffless.app/llms.txt
+- GitHub: https://github.com/bffless/ce
+- License: O'Saasy
+
+## What is BFFless?
+
+BFFless serves as a "Backend for Frontend" without the backend boilerplate. Host AI-generated apps, internal tools, HTML docs, SPAs, and frontend assets — deployed from your CI/CD pipeline — with features that typically require custom infrastructure:
+
+- **Home for AI-generated apps & internal tools**: Host the HTML apps, dashboards, and docs your AI agents and teams produce, behind auth
+- **Static Asset Hosting**: Upload build artifacts from GitHub Actions
+- **Traffic Splitting**: A/B testing and canary deployments
+- **Proxy Rules**: Forward API requests without CORS headaches
+- **Custom Domains**: Dynamic domain mapping with SSL
+- **Deployment Aliases**: Named versions (production, staging, canary)
+- **Multiple Storage Backends**: S3, GCS, Azure, MinIO, or local
+
+## Quick Start
+
+```bash
+# Clone and configure
+git clone https://github.com/bffless/ce.git && cd ce
+cp .env.example .env
+echo "ENCRYPTION_KEY=$(openssl rand -base64 32)" >> .env
+
+# Start
+./start.sh
+```
+
+Access admin at `https://admin.yourdomain.com`, create an API key, deploy:
+
+```yaml
+- uses: bffless/upload-artifact@v1
+  with:
+    api-url: ${{ secrets.BFFLESS_URL }}
+    api-key: ${{ secrets.BFFLESS_API_KEY }}
+    files: dist/**/*
+```
+
+## Key Features
+
+### Traffic Splitting
+Split traffic across deployments for A/B testing or canary releases. Configure percentage weights, sticky sessions, and override rules.
+
+Live demo: https://demo.docs.bffless.app
+
+### Proxy Rules
+Forward `/api/*` requests to backend services. Eliminates CORS configuration. Supports header injection and per-environment overrides.
+
+### Deployment Aliases
+Named references to specific commits. Point `production` at a stable release while `staging` tracks the latest build.
+
+### Multiple Storage Backends
+Pluggable storage: AWS S3, Google Cloud Storage, Azure Blob, MinIO (self-hosted), or S3-compatible services (DigitalOcean Spaces, Cloudflare R2, Backblaze B2).
+
+## Tech Stack
+
+- **Backend**: NestJS, TypeScript, Drizzle ORM, PostgreSQL
+- **Frontend**: React 18, Vite, Redux Toolkit, TailwindCSS
+- **Auth**: SuperTokens (self-hosted)
+- **Proxy**: nginx with dynamic configuration
+- **Container**: Docker Compose
+
+## Requirements
+
+| Resource | Minimum | Recommended |
+|----------|---------|-------------|
+| RAM | 1GB | 2GB |
+| Disk | 20GB | 40GB |
+| CPU | 1 vCPU | 2 vCPU |
+
+Works on any Linux server. $5-10/month VPS from DigitalOcean, Linode, or Hetzner is sufficient.
+
+## SSL Options
+
+**Cloudflare (Recommended)**: 15-year certificates, DDoS protection, CDN included.
+
+**Let's Encrypt**: Auto-renewing certificates, direct connection, requires port 80.
+
+## Use Cases
+
+- **Preview Deployments**: Every PR gets a unique URL
+- **A/B Testing**: Split traffic 50/50 between variants
+- **Canary Releases**: Gradual rollout (5% -> 20% -> 50% -> 100%)
+- **Personalized Content**: Custom versions for specific audiences
+- **Feature Flags**: Serve different configurations per environment
+- **Coverage Reports**: Host test artifacts with permanent URLs
+
+## Documentation
+
+For comprehensive documentation including API reference, configuration options, storage setup guides, and security best practices:
+
+- **Full Documentation**: https://docs.bffless.app
+- **LLM-Optimized Docs**: https://docs.bffless.app/llms.txt
+
+### Quick Links
+
+- [Quick Start Guide](https://docs.bffless.app/getting-started/quickstart)
+- [Architecture Overview](https://docs.bffless.app/reference/architecture)
+- [API Reference](https://docs.bffless.app/reference/api)
+- [Traffic Splitting](https://docs.bffless.app/features/traffic-splitting)
+- [Proxy Rules](https://docs.bffless.app/features/proxy-rules)
+- [Storage Backends](https://docs.bffless.app/storage/overview)
+- [Environment Variables](https://docs.bffless.app/configuration/environment-variables)
+- [Security](https://docs.bffless.app/reference/security)
+
+## GitHub Actions
+
+Official actions for CI/CD integration:
+
+- [bffless/upload-artifact](https://github.com/marketplace/actions/bffless-upload-artifact) - Upload build artifacts
+- [bffless/download-artifact](https://github.com/marketplace/actions/bffless-download-artifact) - Download artifacts
+
+## Community
+
+- [GitHub Issues](https://github.com/bffless/ce/issues) - Bug reports and feature requests
+- [GitHub Discussions](https://github.com/bffless/ce/discussions) - Questions and ideas
+
+## License
+
+O'Saasy License - Free for personal and commercial use.
+
+---
+
+For detailed technical documentation optimized for LLM consumption, see: https://docs.bffless.app/llms.txt

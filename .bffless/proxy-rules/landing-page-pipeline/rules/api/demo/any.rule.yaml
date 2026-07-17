@@ -1,0 +1,77 @@
+targetUrl: ""
+pipeline:
+  name: Demo form handler
+  description: ""
+  steps:
+    - id: step_1772983696224_98dd3hv
+      name: form_validation
+      handler: form_handler
+      config:
+        fields:
+          name:
+            type: string
+            required: true
+          email:
+            type: email
+            required: true
+      isEnabled: true
+    - id: step_1772983734192_259ehv6
+      name: create record
+      handler: data_create
+      config:
+        fields:
+          name: input.name
+          email: input.email
+          source: input.source
+          company: input.company
+          message: input.message
+        schemaId: $schema:demo
+      isEnabled: true
+    - id: step_1772983792704_0rtf84i
+      name: send email
+      handler: email_handler
+      config:
+        to: support@bffless.app
+        body: |-
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+              .field { margin-bottom: 15px; }
+              .label { font-weight: 600; color: #555; }
+              .value { margin-top: 5px; }
+              .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 12px; color: #888; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>New Demo Form Submission</h2>
+              </div>
+
+              <div class="field">
+                <div class="label">Name</div>
+                <div class="value">{{input.name}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Email</div>
+                <div class="value">{{input.email}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Message</div>
+                <div class="value">{{input.message}}</div>
+              </div>
+
+              <div class="footer">
+                Submitted on {{metadata.path}} via {{metadata.method}}
+              </div>
+            </div>
+          </body>
+          </html>
+        subject: New Demo Submission from {{ input.name }}
+      isEnabled: true

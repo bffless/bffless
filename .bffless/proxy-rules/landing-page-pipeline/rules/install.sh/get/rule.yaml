@@ -1,0 +1,61 @@
+targetUrl: ""
+stripPrefix: false
+order: 9
+pipeline:
+  name: install_sh_cli_only_proxy_and_track
+  description: classify_ua → (fetch_script if CLI) → pick_body chooses script or browser message → single respond step. log_download postStep fires for CLI (writes install_downloads); log_view postStep fires for everything else (writes install_views).
+  steps:
+    - id: classify_ua
+      name: classify_ua
+      handler: function_handler
+      code: ./classify_ua.fn.js
+      isEnabled: true
+    - id: fetch_script
+      name: fetch_script
+      handler: http_request
+      config:
+        url: https://raw.githubusercontent.com/bffless/ce/main/install.sh
+        method: GET
+        timeout: 10000
+        condition: steps.classify_ua.is_cli
+      isEnabled: true
+    - id: pick_body
+      name: pick_body
+      handler: function_handler
+      code: ./pick_body.fn.js
+      isEnabled: true
+    - id: respond
+      name: respond
+      handler: response_handler
+      config:
+        body: "{{{steps.pick_body.body}}}"
+        status: 200
+        headers:
+          Cache-Control: no-cache, no-store, must-revalidate
+        contentType: text/plain; charset=utf-8
+      isEnabled: true
+  postSteps:
+    - id: log_download
+      name: log_download
+      handler: data_create
+      config:
+        fields:
+          ip: request.ip
+          tag: install.sh
+          user_agent: request.userAgent
+        schemaId: $schema:install_downloads
+        condition: steps.classify_ua.is_cli
+      isEnabled: true
+    - id: log_view
+      name: log_view
+      handler: data_create
+      config:
+        fields:
+          ip: request.ip
+          tag: install.sh
+          user_agent: request.userAgent
+        schemaId: $schema:install_views
+        condition: "!steps.classify_ua.is_cli"
+      isEnabled: true
+  validators: []
+description: Serve install.sh from GitHub raw to CLI clients, log installs to install_downloads (CLI only); browser/bot visitors get a friendly text message pointing at the GitHub source. Single terminal step so the admin UI renders the whole pipeline.

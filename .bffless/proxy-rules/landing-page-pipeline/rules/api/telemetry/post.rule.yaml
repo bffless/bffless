@@ -1,0 +1,45 @@
+targetUrl: pipeline
+order: 10
+pipeline:
+  name: install_telemetry_collector
+  description: Validate install_id, append a row to install_telemetry (raw IP + UA captured server-side), respond {ok:true}.
+  steps:
+    - id: validate
+      name: validate
+      handler: form_handler
+      config:
+        fields:
+          install_id:
+            type: string
+            required: true
+        honeypotField: website
+      isEnabled: true
+    - id: store
+      name: store
+      handler: data_create
+      config:
+        fields:
+          ip: request.ip
+          os: request.body.os
+          arch: request.body.arch
+          event: request.body.event
+          version: request.body.version
+          install_id: request.body.install_id
+          user_agent: request.userAgent
+          node_version: request.body.node_version
+          deployment_mode: request.body.deployment_mode
+          storage_provider: request.body.storage_provider
+          user_count_bucket: request.body.user_count_bucket
+          project_count_bucket: request.body.project_count_bucket
+          deployment_count_bucket: request.body.deployment_count_bucket
+        schemaId: $schema:install_telemetry
+      isEnabled: true
+    - id: respond
+      name: respond
+      handler: response_handler
+      config:
+        body: '{ "ok": true }'
+        status: 200
+        contentType: application/json
+      isEnabled: true
+description: CE install telemetry collector — append-only into install_telemetry. Counts real running CE self-hosted instances (distinct install_id), as opposed to install.sh downloads.

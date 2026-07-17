@@ -1,0 +1,9 @@
+id: 4d46e706-223d-4691-a0fe-460561f865d9
+name: key-store
+fields:
+  - name: key
+    type: string
+    required: true
+  - name: value
+    type: json
+    required: true

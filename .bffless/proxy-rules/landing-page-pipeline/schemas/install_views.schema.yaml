@@ -1,0 +1,12 @@
+id: 057824f6-992e-44f3-a5b3-86e689e854e4
+name: install_views
+fields:
+  - name: tag
+    type: string
+    required: true
+  - name: ip
+    type: string
+    required: false
+  - name: user_agent
+    type: string
+    required: false

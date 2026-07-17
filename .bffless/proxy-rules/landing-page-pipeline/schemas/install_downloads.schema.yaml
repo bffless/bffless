@@ -1,0 +1,12 @@
+id: 280afe57-6483-4b06-915d-2b650c4d12d1
+name: install_downloads
+fields:
+  - name: tag
+    type: string
+    required: true
+  - name: ip
+    type: string
+    required: false
+  - name: user_agent
+    type: string
+    required: false

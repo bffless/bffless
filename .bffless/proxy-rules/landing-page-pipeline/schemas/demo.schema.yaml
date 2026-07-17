@@ -1,0 +1,18 @@
+id: 3f243c2f-2cab-405b-9565-1a4f84dfc22a
+name: demo
+fields:
+  - name: name
+    type: string
+    required: true
+  - name: email
+    type: email
+    required: true
+  - name: company
+    type: string
+    required: false
+  - name: message
+    type: string
+    required: false
+  - name: source
+    type: string
+    required: false

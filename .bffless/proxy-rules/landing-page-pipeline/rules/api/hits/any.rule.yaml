@@ -1,0 +1,21 @@
+targetUrl: ""
+order: 4
+pipeline:
+  name: Hit Counter (get)
+  description: ""
+  steps:
+    - id: step_1772995608501_nhbint5
+      name: query
+      handler: data_query
+      config:
+        select:
+          - key
+          - value
+        filters:
+          id:
+            op: eq
+            value: 9f0b9ef9-d909-4dd3-8ab1-acfc62706bf6
+        schemaId: $schema:key-store
+      isEnabled: true
+  postSteps: []
+  validators: []

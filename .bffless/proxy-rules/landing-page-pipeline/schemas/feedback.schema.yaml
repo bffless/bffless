@@ -1,0 +1,18 @@
+id: 8976d21e-9188-4982-a194-1a532885d34d
+name: feedback
+fields:
+  - name: name
+    type: string
+    required: false
+  - name: email
+    type: email
+    required: false
+  - name: message
+    type: string
+    required: true
+  - name: category
+    type: string
+    required: false
+  - name: source
+    type: string
+    required: false

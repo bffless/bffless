@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BFFless — The home for your AI-generated apps, internal tools, and HTML docs | Self-hosted, open source</title>
+    <meta
+      name="description"
+      content="The home for your AI-generated apps, internal tools, and HTML docs — with a backend, auth, and a path to your internal services. Self-host with one docker compose up: same git push → live URL flow as GitHub Pages, plus SSO, RBAC, custom domains with auto-SSL, a reverse proxy to any backend, and a no-code pipeline runtime."
+    />
+    <link rel="canonical" href="https://bffless.app/" />
+
+    <!-- Arm entrance motion before first paint (no content flash). Content stays
+         fully visible if this never runs or the user prefers reduced motion. -->
+    <script>
+      try {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('motion-ready');
+        }
+      } catch (e) {}
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500;1,9..144,700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BFFless" />
+    <meta property="og:url" content="https://bffless.app/" />
+    <meta property="og:title" content="BFFless — The home for your AI-generated apps, internal tools, and HTML docs" />
+    <meta property="og:description" content="Somewhere your AI-generated apps, internal tools, and HTML docs can actually live — with a backend, auth, and a path to your internal services. Self-host with one docker compose up. SSO, RBAC, reverse proxy to any backend, server-side pipelines, immutable SHA-keyed deploys." />
+    <meta property="og:image" content="https://bffless.app/images/hero.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BFFless — a home for your AI-generated apps, internal tools & HTML docs" />
+    <meta name="twitter:description" content="A backend, auth, and a path to your internal services for any static build — self-host with one docker compose up. Open source." />
+    <meta name="twitter:image" content="https://bffless.app/images/hero.png" />
+
+    <!-- Additional SEO -->
+    <meta name="keywords" content="host AI-generated apps, host AI agent HTML output, internal tools hosting, self-hosted static hosting, GitHub Pages alternative, open source static hosting, self-hosted Supabase alternative, self-hosted Netlify alternative, BFF server, reverse proxy for static sites, SSO for static sites, RBAC static hosting, deploy static sites GitHub Actions, docker-compose hosting platform" />
+    <meta name="author" content="BFFless, LLC" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "BFFless",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, Docker",
+      "description": "The home for your AI-generated apps, internal tools, and HTML docs — self-hosted, open source, with a backend in front: SSO and RBAC, reverse proxy to any backend, server-side pipelines, immutable SHA-keyed deploys, custom domains with auto-SSL. One docker compose up.",
+      "url": "https://bffless.app",
+      "downloadUrl": "https://github.com/bffless/ce",
+      "softwareVersion": "latest",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "BFFless, LLC",
+        "url": "https://bffless.app"
+      },
+      "featureList": [
+        "Host AI-generated Apps, Internal Tools & HTML Docs",
+        "Static Site Hosting",
+        "SSO + RBAC",
+        "Reverse Proxy (no CORS)",
+        "Server-side Pipelines (no-code BFF)",
+        "Immutable SHA-keyed Deploys",
+        "Custom Domains with auto-SSL",
+        "GitHub Actions Deployment",
+        "Traffic Splitting & A/B Testing",
+        "Five Storage Adapters (S3, GCS, Azure, MinIO, local)"
+      ]
+    }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DLRCRSLFS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-5DLRCRSLFS');
+    </script>
+
+    <!-- Pendo -->
+    <script>
+    (function(apiKey){
+        (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+        v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
+            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+            y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+            z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+    })('ac90ed1d-7f1c-41e2-a1f8-f9bae4bcd250');
+
+    // Get variant from cookie
+    function getVariantCookie() {
+      var match = document.cookie.match(/(?:^|; )__bffless_variant=([^;]*)/);
+      return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    // Initialize Pendo with anonymous visitor and variant metadata
+    pendo.initialize({
+      visitor: {
+        id: 'anonymous-' + (localStorage.getItem('pendo_visitor_id') || (function() {
+          var id = Math.random().toString(36).substring(2) + Date.now().toString(36);
+          localStorage.setItem('pendo_visitor_id', id);
+          return id;
+        })()),
+        variant: getVariantCookie()
+      },
+      account: {
+        id: window.location.hostname
+      }
+    });
+    </script>
+  </head>
+  <body style="background-color: #ECE3D2; color: #171513;">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

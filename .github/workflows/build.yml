@@ -1,0 +1,68 @@
+name: Build & Upload
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-upload:
+    name: Build & Upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build landing site
+        run: pnpm build
+
+      - name: Sync proxy rules
+        uses: bffless/deploy-proxy-rules@v1
+        with:
+          path: |
+            .bffless/proxy-rules/landing-episodes
+            .bffless/proxy-rules/landing-page-pipeline
+          api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
+          api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          project: bffless/platform
+          # Git is the source of truth for these sets: a rule deleted here is deleted live.
+          # Prune only ever removes RULES, and only within the set being synced — pipeline
+          # schemas resolve by name and are never deleted, so record data is untouched.
+          prune: true
+          summary-title: Landing Proxy Rules
+
+      - name: Upload landing site
+        uses: bffless/upload-artifact@v1
+        with:
+          path: dist
+          api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
+          api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          # The live aliases, the bffless.app domain, and every pipeline record still
+          # live under the bffless/platform project. This repo's own name would
+          # otherwise be derived from the GitHub context and deploy somewhere new.
+          repository: bffless/platform
+          alias: landing-production
+          proxy-rule-set-names: landing-episodes,landing-page-pipeline
+          description: 'Landing site build from ${{ github.head_ref || github.ref_name }}'
+          summary-title: Landing Site Build

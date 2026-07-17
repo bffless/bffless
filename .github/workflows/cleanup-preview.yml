@@ -1,0 +1,35 @@
+name: Cleanup PR Preview
+on:
+  pull_request:
+    types: [closed]
+permissions:
+  contents: read
+
+concurrency:
+  group: cleanup-preview-${{ github.event.pull_request.number }}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete preview alias and rule set
+        env:
+          URL: ${{ vars.LANDING_ASSET_HOST_URL }}
+          KEY: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          N: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          # 1. Alias first — a rule set 409s on delete while attached.
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE -H "X-API-Key: $KEY" "$URL/api/repo/bffless/platform/aliases/landing-pr-$N")
+          echo "alias delete: HTTP $code"   # 204 deleted, 404 never existed — both fine
+          [ "$code" = "204" ] || [ "$code" = "404" ] || exit 1
+          # 2. Resolve project id once, then delete each per-PR rule set by name.
+          project_id=$(curl -sf -H "X-API-Key: $KEY" "$URL/api/projects/bffless/platform" | jq -r '.id')
+          if [ -z "$project_id" ] || [ "$project_id" = "null" ]; then echo "could not resolve project bffless/platform"; exit 1; fi
+          sets=$(curl -sf -H "X-API-Key: $KEY" "$URL/api/proxy-rule-sets/project/$project_id")
+          for name in "landing-episodes-pr-$N" "landing-page-pipeline-pr-$N"; do
+            set_id=$(echo "$sets" | jq -r --arg n "$name" '.ruleSets[] | select(.name==$n) | .id')
+            if [ -z "$set_id" ]; then echo "rule set $name not found — nothing to delete"; continue; fi
+            curl -sf -X DELETE -H "X-API-Key: $KEY" "$URL/api/proxy-rule-sets/$set_id" > /dev/null
+            echo "deleted rule set $name ($set_id)"
+          done
