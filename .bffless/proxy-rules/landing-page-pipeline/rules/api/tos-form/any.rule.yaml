@@ -25,9 +25,9 @@ pipeline:
       handler: data_create
       config:
         fields:
-          name: input.name
-          email: input.email
-          message: input.message
+          name: request.body.name
+          email: request.body.email
+          message: request.body.message
         schemaId: $schema:terms
       isEnabled: true
     - id: step_1772983969936_pqmooye
@@ -57,17 +57,17 @@ pipeline:
 
               <div class="field">
                 <div class="label">Name</div>
-                <div class="value">{{input.name}}</div>
+                <div class="value">{{request.body.name}}</div>
               </div>
 
               <div class="field">
                 <div class="label">Email</div>
-                <div class="value">{{input.email}}</div>
+                <div class="value">{{request.body.email}}</div>
               </div>
 
               <div class="field">
                 <div class="label">Message</div>
-                <div class="value">{{input.message}}</div>
+                <div class="value">{{request.body.message}}</div>
               </div>
 
               <div class="footer">
@@ -76,5 +76,5 @@ pipeline:
             </div>
           </body>
           </html>
-        subject: New TOS Form Submission from {{ input.name }}
+        subject: New TOS Form Submission from {{ request.body.name }}
       isEnabled: true
