@@ -20,9 +20,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+        # No version pinned: action-setup v4 reads packageManager from package.json,
+        # so CI and local can't drift onto a lockfile version the other can't read.
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
