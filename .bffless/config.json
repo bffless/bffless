@@ -1,5 +1,5 @@
 {
-  "apiUrl": "https://admin.sandbox.workspace.bffless.app",
-  "project": "bffless/platform",
+  "apiUrl": "https://admin.bffless.dev",
+  "project": "bffless/bffless.app",
   "ruleSets": [".bffless/proxy-rules/*"]
 }

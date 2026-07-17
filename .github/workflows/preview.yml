@@ -55,7 +55,7 @@ jobs:
             .bffless/proxy-rules/landing-page-pipeline
           api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
           api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
-          project: bffless/platform
+          project: bffless/bffless.app
           prune: true   # match production, so the preview reflects what merging will do
           name-suffix: pr-${{ github.event.pull_request.number }}
           summary-title: Landing Preview Proxy Rules
@@ -68,7 +68,6 @@ jobs:
           path: dist
           api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
           api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
-          repository: bffless/platform
           alias: landing-pr-${{ github.event.pull_request.number }}
           proxy-rule-set-names: landing-episodes-pr-${{ github.event.pull_request.number }},landing-page-pipeline-pr-${{ github.event.pull_request.number }}
           description: 'Landing preview for PR #${{ github.event.pull_request.number }}'

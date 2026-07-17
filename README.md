@@ -35,15 +35,16 @@ Four entry points, each its own Rollup input: `index.html` (landing), `terms.htm
 | `preview.yml` | any PR | per-PR rule sets + a `landing-pr-<N>` alias, commented on the PR |
 | `cleanup-preview.yml` | PR closed | tears the per-PR alias and rule sets down |
 
-### The `bffless/platform` project
+### Host and project
 
-Deploys target the BFFless **project** `bffless/platform`, not this repo's name. The live
-aliases, the `bffless.app` domain, and every pipeline record (telemetry, feedback, pricing,
-terms) live under that project. `upload-artifact` would otherwise derive the project from
-the GitHub context, so the workflows pin `repository: bffless/platform` explicitly — don't
-remove that without migrating the data first.
+Deploys target the `bffless/bffless.app` project on the BFFless instance at
+`admin.bffless.dev` — not the `bffless/platform` project on the old sandbox instance the
+site was previously served from. `upload-artifact` derives the project from the GitHub repo
+context, which now matches the project name, so no `repository:` pin is needed.
 
-CI needs a repo variable `LANDING_ASSET_HOST_URL` and a secret `LANDING_ASSET_HOST_KEY`.
+CI needs a repo variable `LANDING_ASSET_HOST_URL` (`https://admin.bffless.dev`) and a
+secret `LANDING_ASSET_HOST_KEY`. `.bffless/config.json` points the local CLI at the same
+place.
 
 ## Proxy rules as code
 
