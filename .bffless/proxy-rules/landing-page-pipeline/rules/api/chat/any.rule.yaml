@@ -1,4 +1,4 @@
-targetUrl: https://chat.docs.bffless.app
+targetUrl: https://chat.bffless.dev
 stripPrefix: false
 order: 5
 description: POST Chat
