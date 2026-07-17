@@ -9,7 +9,7 @@ function handler({ steps }) {
     'This URL is a bash installer for self-hosting BFFless Community Edition.\n' +
     'It is meant to be piped into a shell, not opened in a browser.\n\n' +
     'To install:\n\n' +
-    '    sh -c "$(curl -fsSL https://bffless.app/install.sh)"\n\n' +
+    '    sh -c "$(curl -fsSL https://bffless.dev/install.sh)"\n\n' +
     'To read the source before running it (always a good idea):\n\n' +
     '    https://raw.githubusercontent.com/bffless/ce/refs/heads/main/install.sh\n\n' +
     'Docs:\n\n' +

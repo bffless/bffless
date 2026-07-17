@@ -1,6 +1,6 @@
-# bffless.app
+# bffless
 
-The BFFless landing site — the marketing site served at [bffless.app](https://bffless.app).
+The BFFless landing site — the marketing site served at [bffless.dev](https://bffless.dev).
 
 A static React 18 + Vite + Tailwind site with no backend of its own. Everything dynamic
 (chat, telemetry, the forms, the episodes feed, `install.sh`) is served by BFFless proxy
@@ -37,10 +37,27 @@ Four entry points, each its own Rollup input: `index.html` (landing), `terms.htm
 
 ### Host and project
 
-Deploys target the `bffless/bffless.app` project on the BFFless instance at
-`admin.bffless.dev` — not the `bffless/platform` project on the old sandbox instance the
-site was previously served from. `upload-artifact` derives the project from the GitHub repo
-context, which now matches the project name, so no `repository:` pin is needed.
+Deploys target the **`bffless/bffless.app`** project on the BFFless instance at
+`admin.bffless.dev`, and the site is served at `bffless.dev`.
+
+Three names that look like they should match, but don't:
+
+| Thing | Value |
+| --- | --- |
+| GitHub repo | `bffless/bffless` |
+| BFFless project | `bffless/bffless.app` |
+| Public URL | `bffless.dev` |
+
+The project keeps its `.app` name because a BFFless project's `owner/name` **cannot be
+renamed** — the API only exposes display name, description, and visibility. Renaming it
+would mean creating a new project and migrating the deployment, secrets, and pipeline
+records to it.
+
+That matters because `upload-artifact` derives the target project from the GitHub repo
+context, which would now resolve to `bffless/bffless` and silently deploy to a new empty
+project. So the workflows pin `repository: bffless/bffless.app` explicitly, and
+`deploy-proxy-rules` pins `project:` the same way. **Don't remove those pins** unless the
+project is genuinely renamed.
 
 CI needs a repo variable `LANDING_ASSET_HOST_URL` (`https://admin.bffless.dev`) and a
 secret `LANDING_ASSET_HOST_KEY`. `.bffless/config.json` points the local CLI at the same

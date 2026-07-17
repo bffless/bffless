@@ -2,7 +2,7 @@
 
 import autocannon from 'autocannon';
 
-const TARGET_URL = process.env.TARGET_URL || 'https://landing.sandbox.workspace.bffless.app';
+const TARGET_URL = process.env.TARGET_URL || 'https://bffless.dev';
 const DURATION = parseInt(process.env.DURATION || '30', 10);
 const CONNECTIONS = parseInt(process.env.CONNECTIONS || '5', 10);
 const PIPELINING = parseInt(process.env.PIPELINING || '1', 10);

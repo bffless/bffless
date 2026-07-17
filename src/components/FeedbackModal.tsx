@@ -266,7 +266,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                 <p className="text-center text-sm text-charcoal-muted mt-4">
                   Or chat with us on{' '}
                   <a
-                    href="https://bffless.app/discord"
+                    href="https://bffless.dev/discord"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-charcoal hover:underline font-medium"

@@ -6,7 +6,7 @@
 
 BFFless is a self-hosted, open-source platform that gives static frontends real backend capabilities. It's the home for the apps, internal tools, and HTML docs your team (and your AI coding agents) generate — somewhere they can actually live, with a backend and access control, behind your corporate boundary. It provides the infrastructure typically built into managed platforms - but you own and control everything. Technical framing for those who know the category: a self-hosted Supabase/Appwrite aimed at static sites and internal apps.
 
-- Website: https://bffless.app
+- Website: https://bffless.dev
 - Documentation: https://docs.bffless.app
 - Full LLM Documentation: https://docs.bffless.app/llms.txt
 - GitHub: https://github.com/bffless/ce

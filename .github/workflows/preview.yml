@@ -68,6 +68,11 @@ jobs:
           path: dist
           api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
           api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          # The GitHub repo is bffless/bffless but the BFFless project is still
+          # bffless/bffless.app (a project's owner/name can't be renamed). Without
+          # this pin, upload-artifact derives the project from the repo context and
+          # deploys to a new empty bffless/bffless project.
+          repository: bffless/bffless.app
           alias: landing-pr-${{ github.event.pull_request.number }}
           proxy-rule-set-names: landing-episodes-pr-${{ github.event.pull_request.number }},landing-page-pipeline-pr-${{ github.event.pull_request.number }}
           description: 'Landing preview for PR #${{ github.event.pull_request.number }}'

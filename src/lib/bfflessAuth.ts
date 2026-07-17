@@ -1,7 +1,7 @@
 // BFFless auth helpers for the landing site.
 //
-// bffless.app is a cross-origin custom domain attached to the sandbox
-// workspace, so the SuperTokens `sAccessToken` cookie does NOT reach it.
+// bffless.dev is a cross-origin custom domain attached to the workspace, so
+// the SuperTokens `sAccessToken` cookie does NOT reach it.
 // Session state is read from the built-in `/_bffless/auth/*` surface (which
 // recognizes the relay-minted `bffless_access` cookie), and login bounces
 // through the admin host using the customDomainRelay flow. We still try the
@@ -10,7 +10,7 @@
 //
 // See the bffless `authentication` skill for the full flow.
 
-const ADMIN_LOGIN_URL = 'https://admin.sandbox.workspace.bffless.app/login';
+const ADMIN_LOGIN_URL = 'https://admin.bffless.dev/login';
 
 export interface SessionUser {
   id: string;

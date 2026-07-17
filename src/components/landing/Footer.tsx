@@ -28,7 +28,7 @@ export default function Footer({ onFeedback, onReview }: FooterProps) {
         { href: 'https://docs.bffless.app/', label: 'Documentation' },
         { href: 'https://github.com/bffless/ce', label: 'GitHub · CE' },
         { href: 'https://docs.bffless.app/getting-started/quickstart/', label: 'Quickstart' },
-        { href: 'https://bffless.app/discord', label: 'Discord' },
+        { href: 'https://bffless.dev/discord', label: 'Discord' },
       ],
     },
     {
