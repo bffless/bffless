@@ -17,41 +17,21 @@ export default defineConfig({
     },
   },
   server: {
+    // The deployed site at bffless.dev serves this build as its primary content
+    // with both rule sets attached, so every /api/* route resolves there — including
+    // /api/chat, which the landing-page-pipeline set proxies on to chat.docs.bffless.app.
+    // Pointing dev at the one origin therefore mirrors production exactly.
+    //
+    // Auth is proxied for the dashboard's session check, but login still redirects to
+    // the admin host and localhost won't be an accepted relay targetDomain — exercise
+    // the full auth flow on a deployed preview, not here.
     proxy: {
-      // Auth surface + telemetry stats live on the deployed site. Proxy them to
-      // the real backend so the dashboard's session check + stats fetch resolve
-      // in local dev. (Login still redirects to the admin host; localhost won't
-      // be an accepted relay targetDomain — exercise the full flow on deploy.)
       '/_bffless': {
-        target: 'https://bffless.app',
-        changeOrigin: true,
-      },
-      '/api/telemetry': {
-        target: 'https://bffless.app',
-        changeOrigin: true,
-      },
-      '/api/developer-review': {
-        target: 'https://landing.sandbox.workspace.bffless.app',
-        changeOrigin: true,
-      },
-      '/api/feedback-form': {
-        target: 'https://landing.sandbox.workspace.bffless.app',
-        changeOrigin: true,
-      },
-      '/api/pricing-form': {
-        target: 'https://landing.sandbox.workspace.bffless.app',
-        changeOrigin: true,
-      },
-      '/api/contact-form': {
-        target: 'https://landing.sandbox.workspace.bffless.app',
-        changeOrigin: true,
-      },
-      '/api/episodes': {
-        target: 'https://landing.sandbox.workspace.bffless.app',
+        target: 'https://bffless.dev',
         changeOrigin: true,
       },
       '/api': {
-        target: 'https://chat.docs.bffless.app',
+        target: 'https://bffless.dev',
         changeOrigin: true,
       },
     },

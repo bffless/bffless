@@ -30,7 +30,7 @@ pipeline:
       name: send email
       handler: email_handler
       config:
-        to: toshimoto821@proton.me
+        to: james.charlesworth@bffless.com
         body: |-
           <!DOCTYPE html>
           <html>
