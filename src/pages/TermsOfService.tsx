@@ -148,32 +148,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 6. Payment Terms */}
+          {/* 6. Service Level */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">6. Payment Terms</h2>
-            <p className="text-charcoal-light leading-relaxed mb-4">
-              Certain features of the Service may require payment. By subscribing to a paid plan,
-              you agree to:
-            </p>
-            <ul className="list-disc pl-6 text-charcoal-light space-y-2">
-              <li>Pay all applicable fees as described at the time of purchase;</li>
-              <li>
-                Provide accurate billing information and authorize us to charge your payment method;
-              </li>
-              <li>
-                Fees are billed in advance on a monthly or annual basis, depending on your plan;
-              </li>
-              <li>All fees are non-refundable except as required by law or as stated herein.</li>
-            </ul>
-            <p className="text-charcoal-light leading-relaxed mt-4">
-              We reserve the right to change our pricing with 30 days' notice. Continued use of the
-              Service after a price change constitutes acceptance of the new pricing.
-            </p>
-          </section>
-
-          {/* 7. Service Level */}
-          <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">7. Service Availability</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">6. Service Availability</h2>
             <p className="text-charcoal-light leading-relaxed mb-4">
               We strive to maintain high availability of the Service but do not guarantee
               uninterrupted access. The Service may be temporarily unavailable due to:
@@ -186,9 +163,9 @@ export default function TermsOfService() {
             </ul>
           </section>
 
-          {/* 8. Data and Privacy */}
+          {/* 7. Data and Privacy */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">8. Data and Privacy</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">7. Data and Privacy</h2>
             <p className="text-charcoal-light leading-relaxed mb-4">
               Your privacy is important to us. Our collection and use of personal information is
               governed by our Privacy Policy. By using the Service, you consent to our data
@@ -201,9 +178,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 9. Third-Party Services */}
+          {/* 8. Third-Party Services */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">9. Third-Party Services</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">8. Third-Party Services</h2>
             <p className="text-charcoal-light leading-relaxed">
               The Service may integrate with or link to third-party services. We are not responsible
               for the content, privacy policies, or practices of third-party services. Your use of
@@ -212,9 +189,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 10. Disclaimer of Warranties */}
+          {/* 9. Disclaimer of Warranties */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">10. Disclaimer of Warranties</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">9. Disclaimer of Warranties</h2>
             <p className="text-charcoal-light leading-relaxed mb-4 uppercase text-sm">
               THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
               EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF
@@ -226,9 +203,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 11. Limitation of Liability */}
+          {/* 10. Limitation of Liability */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">11. Limitation of Liability</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">10. Limitation of Liability</h2>
             <p className="text-charcoal-light leading-relaxed mb-4 uppercase text-sm">
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, BFFLESS AND ITS OFFICERS, DIRECTORS,
               EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
@@ -242,9 +219,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 12. Indemnification */}
+          {/* 11. Indemnification */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">12. Indemnification</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">11. Indemnification</h2>
             <p className="text-charcoal-light leading-relaxed">
               You agree to indemnify, defend, and hold harmless BFFless and its officers, directors,
               employees, and agents from and against any claims, liabilities, damages, losses, and
@@ -254,9 +231,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 13. Termination */}
+          {/* 12. Termination */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">13. Termination</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">12. Termination</h2>
             <p className="text-charcoal-light leading-relaxed mb-4">
               You may terminate your account at any time by contacting us or through your account
               settings. We may suspend or terminate your access to the Service at any time, with or
@@ -269,10 +246,10 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 14. DMCA */}
+          {/* 13. DMCA */}
           <section>
             <h2 className="text-2xl font-semibold text-charcoal mb-4">
-              14. Copyright Infringement (DMCA)
+              13. Copyright Infringement (DMCA)
             </h2>
             <p className="text-charcoal-light leading-relaxed mb-4">
               We respect the intellectual property rights of others. If you believe that content
@@ -287,9 +264,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 15. Changes to Terms */}
+          {/* 14. Changes to Terms */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">15. Changes to Terms</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">14. Changes to Terms</h2>
             <p className="text-charcoal-light leading-relaxed">
               We may modify these Terms at any time. We will notify you of material changes by
               posting the updated Terms on this page and updating the "Last Updated" date. Your
@@ -298,9 +275,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 16. Governing Law */}
+          {/* 15. Governing Law */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">16. Governing Law</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">15. Governing Law</h2>
             <p className="text-charcoal-light leading-relaxed">
               These Terms shall be governed by and construed in accordance with the laws of the
               State of Georgia, United States, without regard to its conflict of law provisions.
@@ -310,9 +287,9 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 17. General Provisions */}
+          {/* 16. General Provisions */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">17. General Provisions</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">16. General Provisions</h2>
             <ul className="list-disc pl-6 text-charcoal-light space-y-2">
               <li>
                 <strong>Entire Agreement:</strong> These Terms constitute the entire agreement
@@ -337,9 +314,9 @@ export default function TermsOfService() {
             </ul>
           </section>
 
-          {/* 18. Contact */}
+          {/* 17. Contact */}
           <section>
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">18. Contact Us</h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-4">17. Contact Us</h2>
             <p className="text-charcoal-light leading-relaxed mb-4">
               If you have any questions about these Terms, please contact us:
             </p>

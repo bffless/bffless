@@ -9,7 +9,7 @@ import ArchitectureSection from './components/landing/ArchitectureSection';
 import RBACSection from './components/landing/RBACSection';
 import ComparisonTable from './components/landing/ComparisonTable';
 import StackReadout from './components/landing/StackReadout';
-import TwoPathsCE from './components/landing/TwoPathsCE';
+import SelfHostCE from './components/landing/SelfHostCE';
 import { ChatPopup } from './components/ChatPopup';
 import FeedbackModal from './components/FeedbackModal';
 import DeveloperReviewModal from './components/DeveloperReviewModal';
@@ -44,7 +44,7 @@ export default function App() {
         <RBACSection />
         <ComparisonTable />
         <StackReadout />
-        <TwoPathsCE />
+        <SelfHostCE />
       </main>
 
       <Footer onFeedback={() => setFeedbackOpen(true)} onReview={() => setReviewOpen(true)} />

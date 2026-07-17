@@ -106,7 +106,7 @@ export default function YouTubeShowcase() {
               data-reveal
               style={revealDelay(180)}
             >
-              Drop in a static build. Get forms, auth, and a reverse proxy without writing a backend. Watch how it works.
+              The home for your AI-generated apps, internal tools, and HTML docs. Drop in any static build — hand-written or agent-made — and get forms, auth, and a reverse proxy without writing a backend. Watch how it works.
             </p>
           </div>
           <div

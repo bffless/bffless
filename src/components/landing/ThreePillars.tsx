@@ -4,7 +4,7 @@ const pillars = [
   {
     n: '01',
     label: 'Self-host · your box',
-    title: 'A $6 droplet. Or an enterprise cluster.',
+    title: 'Your server. A $6 droplet will do.',
     body: 'GitHub Pages runs on GitHub\'s edge. BFFless runs on yours — one docker-compose stack: nginx, NestJS backend, React admin frontend, Postgres, SuperTokens. Five storage adapters (S3, GCS, Azure, MinIO, local FS) swap by env var. No phone-home by default.',
     bullets: ['One docker compose up', 'S3 / GCS / Azure / MinIO / FS', 'No telemetry by default', 'Runs anywhere Docker runs'],
     glyph: 'cloud',
@@ -21,7 +21,7 @@ const pillars = [
     n: '03',
     label: 'BFF · proxy + pipelines',
     title: 'Call any backend. Without a backend.',
-    body: 'GitHub Pages can\'t talk to your API without a separate origin and a CORS fight. BFFless ships proxy rule sets per alias and a server-side pipeline runtime — HTTP, data, email, function and other handlers — chained in JSON. The dynamic glue, without the Node service.',
+    body: 'GitHub Pages can\'t talk to your API without a separate origin and a CORS fight. BFFless ships proxy rule sets per alias and a server-side pipeline runtime — HTTP, data, email, function and other handlers — chained in JSON. The dynamic glue that lets an AI-generated app call real APIs — without the Node service.',
     bullets: ['Proxy rule sets · per alias', 'Pipelines · chained handlers', 'No CORS · same-origin', 'Cache rules · CDN headers'],
     glyph: 'cicd',
   },

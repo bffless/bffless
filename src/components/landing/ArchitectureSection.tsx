@@ -17,7 +17,7 @@ export default function ArchitectureSection() {
               Every request flows through the same five layers — edge routing, auth checkpoint, pipeline runtime, BFF proxy, storage. The static artefact at the bottom is the GitHub-Pages-equivalent half; the four layers above it are the BFF server.
             </p>
             <p>
-              Ships as a single docker-compose stack. Nothing in the request path leaves your network. Swap storage by env var. Plug your IdP via the auth layer. Add Redis. Run it on a $6 droplet, a VPS, or a multi-node Kubernetes cluster — the topology is your call.
+              Ships as a single docker-compose stack. Nothing in the request path leaves your network. Swap storage by env var. Plug your IdP via the auth layer. Add Redis. Run it on a $6 droplet or any VPS — your box, your call.
             </p>
           </div>
         </div>
