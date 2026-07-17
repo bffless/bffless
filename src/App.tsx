@@ -6,6 +6,7 @@ import UseCaseGrid from './components/landing/UseCaseGrid';
 import WorkflowSection from './components/landing/WorkflowSection';
 import ThreePillars from './components/landing/ThreePillars';
 import ArchitectureSection from './components/landing/ArchitectureSection';
+import RulesAsCodeSection from './components/landing/RulesAsCodeSection';
 import RBACSection from './components/landing/RBACSection';
 import ComparisonTable from './components/landing/ComparisonTable';
 import StackReadout from './components/landing/StackReadout';
@@ -41,6 +42,7 @@ export default function App() {
         <WorkflowSection />
         <ThreePillars />
         <ArchitectureSection />
+        <RulesAsCodeSection />
         <RBACSection />
         <ComparisonTable />
         <StackReadout />
