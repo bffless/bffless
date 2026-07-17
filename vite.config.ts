@@ -19,7 +19,7 @@ export default defineConfig({
   server: {
     // The deployed site at bffless.dev serves this build as its primary content
     // with both rule sets attached, so every /api/* route resolves there — including
-    // /api/chat, which the landing-page-pipeline set proxies on to chat.docs.bffless.app.
+    // /api/chat, which the landing-page-pipeline set proxies on to chat.bffless.dev.
     // Pointing dev at the one origin therefore mirrors production exactly.
     //
     // Auth is proxied for the dashboard's session check, but login still redirects to

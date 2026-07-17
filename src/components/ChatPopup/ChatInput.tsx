@@ -99,7 +99,7 @@ export function ChatInput({
       {conversationId && (
         <p className="mt-2 text-center text-[11px] text-charcoal-muted">
           <a
-            href={`https://chat.docs.bffless.app/chat/${conversationId}`}
+            href={`https://chat.bffless.dev/chat/${conversationId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-charcoal transition-colors underline"
