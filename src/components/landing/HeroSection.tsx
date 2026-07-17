@@ -28,7 +28,7 @@ export default function HeroSection() {
               <em className="not-italic font-serif italic text-ink">AI-generated apps, internal tools, and HTML docs</em>
               {' '}— with a backend, auth, and a path to your internal services. Point any static build at BFFless and get the{' '}
               <em className="not-italic font-serif italic text-ink">same git push → live URL flow as GitHub Pages</em>
-              {' '}— plus everything GH Pages is missing: SSO, RBAC, a reverse proxy to any backend, server-side pipelines, immutable SHA-keyed deploys. Self-host on a $6 droplet or a Kubernetes cluster with one{' '}
+              {' '}— plus everything GH Pages is missing: SSO, RBAC, a reverse proxy to any backend, server-side pipelines, immutable SHA-keyed deploys. Self-host on a $6 droplet with one{' '}
               <code className="font-mono text-[15px] md:text-[16px] text-ink">docker compose up</code>. Source-available. Free.
             </p>
 

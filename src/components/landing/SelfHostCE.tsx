@@ -21,7 +21,7 @@ export default function SelfHostCE() {
               <h2 className="font-serif text-4xl md:text-[52px] leading-[1.0] tracking-[-0.015em] text-ink">
                 <span className="font-sans font-bold">Run it</span>{' '}
                 <em className="not-italic italic font-medium">yourself.</em>{' '}
-                <span className="font-sans font-bold">A $6 droplet or an enterprise cluster.</span>
+                <span className="font-sans font-bold">A $6 droplet is all it takes.</span>
               </h2>
               <p className="mt-6 text-ink-soft leading-relaxed max-w-md">
                 One <code className="font-mono text-ink">docker compose up</code> and you're hosting. Source-available, no telemetry, no usage cap, no per-seat pricing. The whole platform — auth, RBAC, reverse proxy, pipelines, immutable deploys, custom domains with auto-SSL — runs on a single host. Bring your IdP, swap your storage, ship.

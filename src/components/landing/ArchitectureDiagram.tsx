@@ -35,7 +35,7 @@ export default function ArchitectureDiagram() {
             <rect x="40" y="40" width="700" height="560" fill="none" stroke="#171513" strokeWidth="1.4" strokeDasharray="6,4" />
             <rect x="40" y="40" width="220" height="22" fill="#171513" />
             <text x="50" y="56" fontFamily="JetBrains Mono, monospace" fontSize="10" fill="#ECE3D2" letterSpacing="1.4">
-              YOUR-BOX · VPS OR CLUSTER
+              YOUR-BOX · DOCKER-COMPOSE
             </text>
           </g>
 

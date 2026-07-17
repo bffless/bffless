@@ -4,7 +4,7 @@ const pillars = [
   {
     n: '01',
     label: 'Self-host · your box',
-    title: 'A $6 droplet. Or an enterprise cluster.',
+    title: 'Your server. A $6 droplet will do.',
     body: 'GitHub Pages runs on GitHub\'s edge. BFFless runs on yours — one docker-compose stack: nginx, NestJS backend, React admin frontend, Postgres, SuperTokens. Five storage adapters (S3, GCS, Azure, MinIO, local FS) swap by env var. No phone-home by default.',
     bullets: ['One docker compose up', 'S3 / GCS / Azure / MinIO / FS', 'No telemetry by default', 'Runs anywhere Docker runs'],
     glyph: 'cloud',
