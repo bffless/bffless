@@ -52,7 +52,7 @@ export default function UseCaseGrid() {
         <div className="grid lg:grid-cols-12 gap-10 mb-12 md:mb-16" data-reveal>
           <div className="lg:col-span-5">
             <h2 className="font-serif text-3xl md:text-5xl leading-[1.05] tracking-[-0.01em] font-sans font-bold">
-              Static sites your team needs behind login.
+              Where your AI-generated apps and internal tools live.
             </h2>
           </div>
           <div className="lg:col-span-6 lg:col-start-7 self-end">

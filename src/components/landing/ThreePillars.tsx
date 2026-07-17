@@ -21,7 +21,7 @@ const pillars = [
     n: '03',
     label: 'BFF · proxy + pipelines',
     title: 'Call any backend. Without a backend.',
-    body: 'GitHub Pages can\'t talk to your API without a separate origin and a CORS fight. BFFless ships proxy rule sets per alias and a server-side pipeline runtime — HTTP, data, email, function and other handlers — chained in JSON. The dynamic glue, without the Node service.',
+    body: 'GitHub Pages can\'t talk to your API without a separate origin and a CORS fight. BFFless ships proxy rule sets per alias and a server-side pipeline runtime — HTTP, data, email, function and other handlers — chained in JSON. The dynamic glue that lets an AI-generated app call real APIs — without the Node service.',
     bullets: ['Proxy rule sets · per alias', 'Pipelines · chained handlers', 'No CORS · same-origin', 'Cache rules · CDN headers'],
     glyph: 'cicd',
   },
