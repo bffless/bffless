@@ -52,10 +52,11 @@ environment-specific ID.
 
 ### `landing-episodes/`
 
-One route, `/api/episodes`: fetches the YouTube Docs playlist, reshapes it in
-`shape.fn.js` (parse the episode number out of the title, sort newest-first),
-and serves JSON with a 1-hour cache. If YouTube is down it returns 503 rather
-than failing the page.
+One route, [`/api/episodes`](https://bffless.dev/api/episodes) — go and hit it,
+that JSON is this rule set responding. It fetches the YouTube Docs playlist,
+reshapes it in `shape.fn.js` (parse the episode number out of the title, sort
+newest-first), and serves the result with a 1-hour cache. If YouTube is down it
+returns 503 rather than failing the page.
 
 The API key comes from `secrets.YOUTUBE_API_KEY` — secrets are referenced by
 name and resolved server-side, never committed here.
