@@ -73,7 +73,8 @@ with `prune: true` — **git is the source of truth**, so a rule deleted here is
 deleted in production. Pruning only ever removes rules within the set being
 synced; schemas resolve by name and are never dropped, so record data is safe.
 
-Locally, the CLI does the same two things:
+Locally, the [`bffless` CLI](https://github.com/bffless/ce/tree/main/packages/cli)
+does the same two things:
 
 ```bash
 bffless rules diff           # what's different between this branch and live
