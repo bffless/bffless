@@ -114,10 +114,32 @@ export default function RulesAsCodeSection() {
               makes the server match the branch — a rule deleted here is deleted in
               production.
             </p>
+            <p className="mt-4 text-[15px] text-ink-soft leading-relaxed">
+              This isn't a mock-up — it's{' '}
+              <a
+                href="https://github.com/bffless/bffless/tree/main/.bffless/proxy-rules"
+                target="_blank"
+                rel="noreferrer"
+                className="text-terracotta hover:text-terracotta-hover underline underline-offset-4 decoration-paper-line hover:decoration-terracotta transition-colors"
+              >
+                this site's own backend, on GitHub
+              </a>
+              .
+            </p>
           </div>
 
           <div className="lg:col-span-7 min-w-0" data-reveal>
-            <p className="meta-label mb-4">Fig. 05b · a pipeline, in full</p>
+            <p className="meta-label mb-4">
+              Fig. 05b · a pipeline, in full ·{' '}
+              <a
+                href="https://github.com/bffless/bffless/blob/main/.bffless/proxy-rules/landing-page-pipeline/rules/api/feedback-form/any.rule.yaml"
+                target="_blank"
+                rel="noreferrer"
+                className="text-terracotta hover:text-terracotta-hover underline underline-offset-4 decoration-paper-line hover:decoration-terracotta transition-colors"
+              >
+                view on GitHub
+              </a>
+            </p>
             <pre className="border border-ink bg-ink text-paper p-6 md:p-7 overflow-x-auto text-[12.5px] leading-[1.7] font-mono">
               <code>{ruleYaml}</code>
             </pre>
