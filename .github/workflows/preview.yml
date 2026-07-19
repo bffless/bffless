@@ -53,6 +53,7 @@ jobs:
           path: |
             .bffless/proxy-rules/landing-episodes
             .bffless/proxy-rules/landing-page-pipeline
+            .bffless/proxy-rules/youtube-subscriber-watch
           api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
           api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
           project: bffless/bffless.app

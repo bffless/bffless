@@ -75,9 +75,14 @@ appends a new row (count, previous, delta) and emails a notification.
 
 The set is intentionally **not attached to any alias**: the schedule triggers
 the pipeline directly by rule id, so the route never needs to be reachable
-(and attaching it would let anyone spam the email step). The schedule itself
-(cron expression, timezone) is not part of this export — it's managed in the
-dashboard under Pipeline Schedules, pointed at this rule.
+(and attaching it would let anyone spam the email step). Don't "fix" that with
+an `auth_required` validator either — scheduled runs execute with no user, so
+the validator would fail every cron fire. For an authenticated one-off run,
+use the dashboard's **Test** button on the rule (`POST
+/api/proxy-rules/<rule-id>/test`) — it works without any alias attachment and
+returns per-step debug output. The schedule itself (cron expression, timezone)
+is not part of this export — it's managed in the dashboard under Pipeline
+Schedules, pointed at this rule.
 
 ## How it gets deployed
 
