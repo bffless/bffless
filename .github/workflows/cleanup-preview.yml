@@ -27,7 +27,7 @@ jobs:
           project_id=$(curl -sf -H "X-API-Key: $KEY" "$URL/api/projects/bffless/bffless.app" | jq -r '.id')
           if [ -z "$project_id" ] || [ "$project_id" = "null" ]; then echo "could not resolve project bffless/bffless.app"; exit 1; fi
           sets=$(curl -sf -H "X-API-Key: $KEY" "$URL/api/proxy-rule-sets/project/$project_id")
-          for name in "landing-episodes-pr-$N" "landing-page-pipeline-pr-$N"; do
+          for name in "landing-episodes-pr-$N" "landing-page-pipeline-pr-$N" "youtube-subscriber-watch-pr-$N"; do
             set_id=$(echo "$sets" | jq -r --arg n "$name" '.ruleSets[] | select(.name==$n) | .id')
             if [ -z "$set_id" ]; then echo "rule set $name not found — nothing to delete"; continue; fi
             curl -sf -X DELETE -H "X-API-Key: $KEY" "$URL/api/proxy-rule-sets/$set_id" > /dev/null
