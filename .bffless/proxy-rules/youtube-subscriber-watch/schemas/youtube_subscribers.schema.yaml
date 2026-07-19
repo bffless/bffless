@@ -1,0 +1,17 @@
+name: youtube_subscribers
+fields:
+  - name: count
+    type: number
+    required: true
+  - name: previous
+    type: number
+    required: false
+  - name: delta
+    type: number
+    required: false
+  - name: channel
+    type: string
+    required: false
+  - name: fired_at
+    type: datetime
+    required: false

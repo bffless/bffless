@@ -1,0 +1,76 @@
+description: >-
+  Cron-only pipeline (fired by a BFFless pipeline schedule; the schedule POSTs
+  {scheduleId, scheduleName, firedAt}). Polls the YouTube Data API for the
+  @bffless subscriber count; when it differs from the newest stored reading it
+  appends a youtube_subscribers row and emails a notification. Do not attach
+  this set to a public alias — anyone could then spam the email step.
+timeout: 20000
+pipeline:
+  name: youtube_subscriber_watch
+  description: >-
+    fetch (channels.list, failOnError:false) -> last (newest stored row) ->
+    decide (parse + compare) -> store + notify only when changed ->
+    respond 200 with the comparison summary, or 502 if YouTube failed.
+  steps:
+    - name: fetch
+      handler: http_request
+      config:
+        url: https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=bffless
+        method: GET
+        timeout: 10000
+        failOnError: false
+        headers:
+          X-Goog-Api-Key: secrets.YOUTUBE_API_KEY
+
+    # No orderBy: the default is createdAt DESC, which is exactly "newest
+    # reading". (An explicit orderBy on a data field sorts the JSONB value as
+    # TEXT — sorting by count would be lexicographic, not numeric.)
+    - name: last
+      handler: data_query
+      config:
+        schemaId: $schema:youtube_subscribers
+        single: true
+        limit: 1
+
+    - name: decide
+      handler: function_handler
+      code: decide.fn.js
+
+    - name: store
+      handler: data_create
+      config:
+        condition: steps.decide.changed
+        schemaId: $schema:youtube_subscribers
+        fields:
+          count: steps.decide.count
+          previous: steps.decide.previous
+          delta: steps.decide.delta
+          channel: '"bffless"'
+          fired_at: request.body.firedAt
+
+    - name: notify
+      handler: email_handler
+      config:
+        condition: steps.decide.changed
+        to: james.charlesworth@bffless.com
+        subject: "YouTube @bffless subscribers: {{steps.decide.count}} ({{steps.decide.deltaLabel}})"
+        # $file: is resolved at build time — the compiler inlines the file's contents
+        # as the body string; {{...}} templates inside it still interpolate at runtime.
+        body:
+          $file: notify-email.html
+
+    - name: fetch_failed
+      handler: response_handler
+      config:
+        condition: steps.decide.fetchFailed
+        status: 502
+        contentType: application/json
+        body: "{{{steps.decide.summary}}}"
+
+    - name: respond
+      handler: response_handler
+      config:
+        condition: "!steps.decide.fetchFailed"
+        status: 200
+        contentType: application/json
+        body: "{{{steps.decide.summary}}}"

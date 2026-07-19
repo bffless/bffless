@@ -1,0 +1,8 @@
+name: youtube-subscriber-watch
+description: >-
+  Cron-driven watcher for the @bffless YouTube channel. A BFFless pipeline
+  schedule fires the single rule in this set on a cadence; it polls the YouTube
+  Data API for the subscriber count and, only when the count differs from the
+  last stored reading, appends a youtube_subscribers row and sends an email
+  notification. Not meant to be attached to any public alias — the schedule
+  triggers the pipeline directly by rule id.

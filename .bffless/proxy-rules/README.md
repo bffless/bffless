@@ -28,7 +28,7 @@ that verb.
 
 ## What's in here
 
-Two rule sets, each a directory with a `ruleset.yaml` at its root.
+Three rule sets, each a directory with a `ruleset.yaml` at its root.
 
 ### `landing-page-pipeline/`
 
@@ -63,6 +63,26 @@ name and resolved server-side, never committed here.
 
 Note `shape.fn.test.yaml` next to it: handler functions are unit-testable, with
 cases declared as YAML fixtures.
+
+### `youtube-subscriber-watch/`
+
+A **cron pipeline**, not a public endpoint. A BFFless *pipeline schedule* fires
+its one rule on a cadence; each run polls the YouTube Data API for the
+[@bffless](https://www.youtube.com/@bffless) subscriber count, compares it to
+the newest `youtube_subscribers` row, and — only when the count changed —
+appends a new row (count, previous, delta) and emails a notification.
+`decide.fn.js` does the comparison and is covered by `decide.fn.test.yaml`.
+
+The set is intentionally **not attached to any alias**: the schedule triggers
+the pipeline directly by rule id, so the route never needs to be reachable
+(and attaching it would let anyone spam the email step). Don't "fix" that with
+an `auth_required` validator either — scheduled runs execute with no user, so
+the validator would fail every cron fire. For an authenticated one-off run,
+use the dashboard's **Test** button on the rule (`POST
+/api/proxy-rules/<rule-id>/test`) — it works without any alias attachment and
+returns per-step debug output. The schedule itself (cron expression, timezone)
+is not part of this export — it's managed in the dashboard under Pipeline
+Schedules, pointed at this rule.
 
 ## How it gets deployed
 
