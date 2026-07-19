@@ -1,0 +1,125 @@
+handler: ./decide.fn.js
+cases:
+  - name: first run stores a baseline and notifies
+    data:
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { subscriberCount: "1234" }
+        last: null
+    expect:
+      result:
+        fetchFailed: false
+        changed: true
+        isFirst: true
+        count: 1234
+        previous: null
+        delta: null
+        deltaLabel: first reading
+        previousLabel: no prior reading
+        summary: { ok: true, changed: true, count: 1234, previous: null, delta: null }
+
+  - name: unchanged count is a no-op
+    data:
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { subscriberCount: "1234" }
+        last: { id: abc, count: 1234 }
+    expect:
+      result:
+        fetchFailed: false
+        changed: false
+        isFirst: false
+        count: 1234
+        previous: 1234
+        delta: 0
+        deltaLabel: "0"
+        previousLabel: "1234"
+        summary: { ok: true, changed: false, count: 1234, previous: 1234, delta: 0 }
+
+  - name: increase fires with a plus-signed delta
+    data:
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { subscriberCount: "1240" }
+        last: { id: abc, count: 1234 }
+    expect:
+      result:
+        fetchFailed: false
+        changed: true
+        isFirst: false
+        count: 1240
+        previous: 1234
+        delta: 6
+        deltaLabel: "+6"
+        previousLabel: "1234"
+        summary: { ok: true, changed: true, count: 1240, previous: 1234, delta: 6 }
+
+  - name: decrease fires with a minus-signed delta
+    data:
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { subscriberCount: "1230" }
+        last: { id: abc, count: 1234 }
+    expect:
+      result:
+        fetchFailed: false
+        changed: true
+        isFirst: false
+        count: 1230
+        previous: 1234
+        delta: -4
+        deltaLabel: "-4"
+        previousLabel: "1234"
+        summary: { ok: true, changed: true, count: 1230, previous: 1234, delta: -4 }
+
+  - name: unreachable YouTube never stores or emails
+    data:
+      steps:
+        fetch: { ok: false }
+        last: { id: abc, count: 1234 }
+    expect:
+      result:
+        fetchFailed: true
+        changed: false
+        error: youtube_unreachable
+        summary: { ok: false, error: youtube_unreachable }
+
+  - name: hidden subscriber count is a distinct failure
+    data:
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { hiddenSubscriberCount: true }
+        last: null
+    expect:
+      result:
+        fetchFailed: true
+        changed: false
+        error: subscriber_count_hidden
+        summary: { ok: false, error: subscriber_count_hidden }
+
+  - name: missing statistics is a distinct failure
+    data:
+      steps:
+        fetch: { ok: true, body: { items: [] } }
+        last: null
+    expect:
+      result:
+        fetchFailed: true
+        changed: false
+        error: subscriber_count_missing
+        summary: { ok: false, error: subscriber_count_missing }
