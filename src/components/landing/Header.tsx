@@ -7,6 +7,7 @@ const navLinks = [
   { href: '#platform', label: 'Platform' },
   { href: '#architecture', label: 'Architecture' },
   { href: '#compare', label: 'Compare' },
+  { href: '#apps', label: 'Apps' },
 ];
 
 const sectionIds = navLinks.map(({ href }) => href.slice(1));
