@@ -1,7 +1,8 @@
 // The app catalog: ready-made apps that install in one click onto a self-hosted
-// instance. Card data is static on purpose — apps.bffless.dev/registry.json serves
-// no Access-Control-Allow-Origin, so a runtime fetch from this origin would fail.
-// Adding an app here is a one-entry edit once it ships to the catalog.
+// instance. Card data is static on purpose — adding an app here is a one-entry edit
+// once it ships to the catalog. To make this track the registry live instead, proxy
+// apps.bffless.dev/registry.json through a rule on this site's own rule set and fetch
+// it same-origin (/api/...) — don't fetch the cross-origin URL directly.
 
 import { trackConversion } from '../../hooks/useAnalytics';
 import { revealDelay } from '../../hooks/useReveal';
