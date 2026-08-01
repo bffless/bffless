@@ -10,6 +10,7 @@ import RulesAsCodeSection from './components/landing/RulesAsCodeSection';
 import RBACSection from './components/landing/RBACSection';
 import ComparisonTable from './components/landing/ComparisonTable';
 import StackReadout from './components/landing/StackReadout';
+import AppCatalogSection from './components/landing/AppCatalogSection';
 import SelfHostCE from './components/landing/SelfHostCE';
 import { ChatPopup } from './components/ChatPopup';
 import FeedbackModal from './components/FeedbackModal';
@@ -46,6 +47,7 @@ export default function App() {
         <RBACSection />
         <ComparisonTable />
         <StackReadout />
+        <AppCatalogSection />
         <SelfHostCE />
       </main>
 
