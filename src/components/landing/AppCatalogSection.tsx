@@ -19,7 +19,7 @@ type CatalogApp = {
   summary: string;
   href?: string;
   thumbnail?: string;
-  glyph?: 'studio' | 'reader';
+  glyph?: 'studio';
 };
 
 const apps: CatalogApp[] = [
@@ -49,13 +49,14 @@ const apps: CatalogApp[] = [
   {
     n: '03',
     id: 'reader',
-    name: 'Reader',
+    name: 'Rivulet',
     tag: 'Feeds',
-    status: 'In development',
-    available: false,
+    status: 'Available · v1.0',
+    available: true,
     summary:
-      'A Google-Reader-style RSS reader — folders, a unified river of unread items, stars, and OPML import — refreshed in the background by a scheduled pipeline on your own instance.',
-    glyph: 'reader',
+      'A quiet, multi-user RSS reader — folders, a river of unread items, stars, keyboard-first triage, and OPML import — kept fresh in the background by scheduled pipelines on your own instance.',
+    href: 'https://apps.bffless.dev/apps/reader/',
+    thumbnail: '/images/apps/reader.png',
   },
 ];
 
@@ -199,7 +200,7 @@ export default function AppCatalogSection() {
 
 // Letterpress placeholders for apps that have no catalog screenshot yet, drawn in the
 // same framed-figure language as the use-case grid.
-function AppGlyph({ glyph, id }: { glyph: 'studio' | 'reader'; id: string }) {
+function AppGlyph({ glyph, id }: { glyph: 'studio'; id: string }) {
   return (
     <svg viewBox="0 0 200 112" className="absolute inset-0 w-full h-full" aria-hidden="true">
       <defs>
@@ -225,26 +226,6 @@ function AppGlyph({ glyph, id }: { glyph: 'studio' | 'reader'; id: string }) {
         </g>
       )}
 
-      {glyph === 'reader' && (
-        <g>
-          {/* feed list beside a river of unread items */}
-          <rect x="40" y="26" width="42" height="60" fill="#ECE3D2" stroke="#171513" strokeWidth="1.1" />
-          <rect x="46" y="34" width="26" height="2.5" fill="#171513" />
-          <rect x="46" y="42" width="30" height="2.5" fill="#171513" opacity="0.6" />
-          <rect x="46" y="50" width="22" height="2.5" fill="#171513" opacity="0.6" />
-          <rect x="46" y="58" width="28" height="2.5" fill="#171513" opacity="0.6" />
-          <circle cx="76" cy="35" r="2.4" fill="#D85A3D" />
-          <rect x="88" y="26" width="72" height="17" fill="#ECE3D2" stroke="#171513" strokeWidth="1" />
-          <rect x="94" y="31" width="40" height="2.5" fill="#171513" />
-          <rect x="94" y="37" width="56" height="2" fill="#171513" opacity="0.5" />
-          <rect x="88" y="47" width="72" height="17" fill="#ECE3D2" stroke="#171513" strokeWidth="1" />
-          <rect x="94" y="52" width="34" height="2.5" fill="#171513" />
-          <rect x="94" y="58" width="50" height="2" fill="#171513" opacity="0.5" />
-          <rect x="88" y="68" width="72" height="17" fill="#ECE3D2" stroke="#171513" strokeWidth="1" />
-          <rect x="94" y="73" width="46" height="2.5" fill="#171513" opacity="0.6" />
-          <rect x="94" y="79" width="30" height="2" fill="#171513" opacity="0.4" />
-        </g>
-      )}
     </svg>
   );
 }
