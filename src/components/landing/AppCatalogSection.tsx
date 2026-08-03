@@ -19,7 +19,6 @@ type CatalogApp = {
   summary: string;
   href?: string;
   thumbnail?: string;
-  glyph?: 'studio';
 };
 
 const apps: CatalogApp[] = [
@@ -40,11 +39,12 @@ const apps: CatalogApp[] = [
     id: 'studio',
     name: 'Studio',
     tag: 'Video',
-    status: 'In development',
-    available: false,
+    status: 'Available · v1.0',
+    available: true,
     summary:
       'Turns one long, rambly screen recording into a short video in your own recorded voice — an AI director proposes the cuts, you tune them scene by scene, and the kept footage is stitched into a final cut.',
-    glyph: 'studio',
+    href: 'https://apps.bffless.dev/apps/studio/',
+    thumbnail: '/images/apps/studio.png',
   },
   {
     n: '03',
@@ -108,7 +108,7 @@ export default function AppCatalogSection() {
               </div>
 
               <div className="relative aspect-[16/9] mb-6 border border-paper-line bg-paper-deep/30 overflow-hidden">
-                {app.thumbnail ? (
+                {app.thumbnail && (
                   <img
                     src={app.thumbnail}
                     alt={`${app.name} — screenshot of the app running on a BFFless instance`}
@@ -117,8 +117,6 @@ export default function AppCatalogSection() {
                     height={630}
                     className="absolute inset-0 w-full h-full object-cover object-top"
                   />
-                ) : (
-                  <AppGlyph glyph={app.glyph!} id={app.id} />
                 )}
               </div>
 
@@ -195,37 +193,5 @@ export default function AppCatalogSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-// Letterpress placeholders for apps that have no catalog screenshot yet, drawn in the
-// same framed-figure language as the use-case grid.
-function AppGlyph({ glyph, id }: { glyph: 'studio'; id: string }) {
-  return (
-    <svg viewBox="0 0 200 112" className="absolute inset-0 w-full h-full" aria-hidden="true">
-      <defs>
-        <pattern id={`app-mg-${id}`} width="8" height="8" patternUnits="userSpaceOnUse">
-          <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#171513" strokeWidth="0.4" opacity="0.4" />
-        </pattern>
-      </defs>
-      <rect x="0" y="0" width="200" height="112" fill={`url(#app-mg-${id})`} />
-      <rect x="0" y="0" width="8" height="8" fill="#171513" />
-      <rect x="192" y="104" width="8" height="8" fill="#171513" />
-
-      {glyph === 'studio' && (
-        <g>
-          {/* timeline with kept spans and one dropped cut */}
-          <rect x="40" y="26" width="120" height="26" fill="#ECE3D2" stroke="#171513" strokeWidth="1.1" />
-          <polygon points="86,34 100,39 86,44" fill="#171513" />
-          <rect x="40" y="66" width="34" height="10" fill="#171513" />
-          <rect x="78" y="66" width="22" height="10" fill="#ECE3D2" stroke="#D85A3D" strokeWidth="1" strokeDasharray="2,2" />
-          <rect x="104" y="66" width="26" height="10" fill="#171513" opacity="0.78" />
-          <rect x="134" y="66" width="26" height="10" fill="#171513" />
-          <line x1="40" y1="84" x2="160" y2="84" stroke="#171513" strokeWidth="0.5" />
-          <rect x="98" y="60" width="1.4" height="30" fill="#D85A3D" />
-        </g>
-      )}
-
-    </svg>
   );
 }
