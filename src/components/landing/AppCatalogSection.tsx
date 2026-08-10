@@ -18,6 +18,7 @@ type CatalogApp = {
   available: boolean;
   summary: string;
   href?: string;
+  linkLabel?: string;
   thumbnail?: string;
 };
 
@@ -58,6 +59,19 @@ const apps: CatalogApp[] = [
     href: 'https://apps.bffless.dev/apps/reader/',
     thumbnail: '/images/apps/reader.png',
   },
+  {
+    n: '04',
+    id: 'recall',
+    name: 'Recall',
+    tag: 'Search',
+    status: 'Live demo',
+    available: true,
+    summary:
+      'Semantic search and RAG chat over a video library — upload talks, Recall transcribes and embeds them on your own instance, and every search hit and chat answer deep-links to the exact second on YouTube.',
+    href: 'https://recall.bffless.dev/',
+    linkLabel: 'Visit the live site',
+    thumbnail: '/images/apps/recall.png',
+  },
 ];
 
 export default function AppCatalogSection() {
@@ -82,7 +96,7 @@ export default function AppCatalogSection() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 border-t border-l border-paper-line">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 border-t border-l border-paper-line">
           {apps.map((app, i) => (
             <article
               key={app.id}
@@ -90,7 +104,7 @@ export default function AppCatalogSection() {
               data-reveal
               style={revealDelay(i * 60)}
             >
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-6 lg:flex-col lg:items-start">
                 <span className="meta-label">N°-{app.n} · {app.tag}</span>
                 <span
                   className={`meta-label flex items-center gap-2 ${
@@ -134,7 +148,7 @@ export default function AppCatalogSection() {
                     }
                     className="inline-flex items-center gap-2 font-mono text-[12.5px] text-ink hover:text-terracotta transition-colors"
                   >
-                    View in the app store
+                    {app.linkLabel ?? 'View in the app store'}
                     <span aria-hidden="true">→</span>
                   </a>
                 ) : (

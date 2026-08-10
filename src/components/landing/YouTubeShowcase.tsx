@@ -282,6 +282,41 @@ export default function YouTubeShowcase() {
             )}
           </div>
         </div>
+
+        {/* Transcript search: a plain GET form — Recall reads ?q= on load and
+            runs the search itself, so no JS is needed to hand off the query. */}
+        <form
+          action="https://recall.bffless.dev/"
+          method="get"
+          onSubmit={() => trackConversion('recall_search_submitted', { source: 'episodes' })}
+          data-reveal
+          style={revealDelay(420)}
+          className="mt-8 md:mt-10 border border-ink/10 bg-paper-deep/40 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-8"
+        >
+          <div className="md:flex-1 min-w-0">
+            <p className="meta-label mb-1.5">Search the episodes · recall.bffless.dev</p>
+            <p className="text-[14.5px] text-ink-soft leading-relaxed">
+              Looking for the moment something was said? Search every episode's transcript and jump
+              to the exact second on YouTube.
+            </p>
+          </div>
+          <div className="flex w-full md:w-auto items-stretch gap-3">
+            <label htmlFor="recall-q" className="sr-only">
+              Search video transcripts
+            </label>
+            <input
+              id="recall-q"
+              name="q"
+              type="search"
+              required
+              placeholder="e.g. reverse proxy"
+              className="w-full md:w-64 border border-ink/20 bg-paper px-4 py-2.5 font-mono text-[13px] text-ink placeholder:text-ink-mute focus:outline-none focus:border-ink transition-colors"
+            />
+            <button type="submit" className="pill-cta flex-shrink-0">
+              Search
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );
