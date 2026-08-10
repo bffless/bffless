@@ -288,6 +288,8 @@ export default function YouTubeShowcase() {
         <form
           action="https://recall.bffless.dev/"
           method="get"
+          target="_blank"
+          rel="noopener"
           onSubmit={() => trackConversion('recall_search_submitted', { source: 'episodes' })}
           data-reveal
           style={revealDelay(420)}

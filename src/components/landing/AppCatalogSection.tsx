@@ -19,6 +19,7 @@ type CatalogApp = {
   summary: string;
   href?: string;
   linkLabel?: string;
+  newTab?: boolean;
   thumbnail?: string;
 };
 
@@ -70,6 +71,7 @@ const apps: CatalogApp[] = [
       'Semantic search and RAG chat over a video library — upload talks, Recall transcribes and embeds them on your own instance, and every search hit and chat answer deep-links to the exact second on YouTube.',
     href: 'https://recall.bffless.dev/',
     linkLabel: 'Visit the live site',
+    newTab: true,
     thumbnail: '/images/apps/recall.png',
   },
 ];
@@ -143,6 +145,7 @@ export default function AppCatalogSection() {
                 {app.href ? (
                   <a
                     href={app.href}
+                    {...(app.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     onClick={() =>
                       trackConversion('app_store_clicked', { source: 'catalog_card', app: app.id })
                     }
