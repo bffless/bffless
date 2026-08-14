@@ -7,9 +7,10 @@ interface FooterLink {
 interface FooterProps {
   onFeedback: () => void;
   onReview: () => void;
+  onEnquire: () => void;
 }
 
-export default function Footer({ onFeedback, onReview }: FooterProps) {
+export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps) {
   const year = new Date().getFullYear();
 
   const cols: { label: string; links: FooterLink[] }[] = [
@@ -35,6 +36,7 @@ export default function Footer({ onFeedback, onReview }: FooterProps) {
     {
       label: 'Company',
       links: [
+        { onClick: onEnquire, label: 'Hire me to set it up' },
         { onClick: onReview, label: 'Leave a review' },
         { onClick: onFeedback, label: 'Feedback' },
         { href: '/terms.html', label: 'Terms' },

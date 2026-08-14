@@ -8,11 +8,16 @@ const navLinks = [
   { href: '#architecture', label: 'Architecture' },
   { href: '#compare', label: 'Compare' },
   { href: '#apps', label: 'Apps' },
+  { href: '#setup', label: 'Get set up' },
 ];
 
 const sectionIds = navLinks.map(({ href }) => href.slice(1));
 
-export default function Header() {
+interface HeaderProps {
+  onEnquire: () => void;
+}
+
+export default function Header({ onEnquire }: HeaderProps) {
   const activeId = useScrollSpy(sectionIds);
 
   return (
@@ -48,6 +53,11 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Hidden on phones: the bar can't hold three items under 640px without the
+              Self-host CTA wrapping. Mobile reaches this via #setup and the footer. */}
+          <button type="button" onClick={onEnquire} className="pill-ghost hidden sm:inline-flex">
+            Hire me
+          </button>
           <a
             href="https://github.com/bffless/ce"
             onClick={() => trackConversion('github_clicked', { source: 'header' })}

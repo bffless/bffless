@@ -12,14 +12,18 @@ import ComparisonTable from './components/landing/ComparisonTable';
 import StackReadout from './components/landing/StackReadout';
 import AppCatalogSection from './components/landing/AppCatalogSection';
 import SelfHostCE from './components/landing/SelfHostCE';
+import ConsultingSection from './components/landing/ConsultingSection';
 import { ChatPopup } from './components/ChatPopup';
 import FeedbackModal from './components/FeedbackModal';
 import DeveloperReviewModal from './components/DeveloperReviewModal';
+import ConsultingModal from './components/ConsultingModal';
 import { useReveal } from './hooks/useReveal';
 
 export default function App() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  // Tracks which CTA opened the consulting modal, so the enquiry record says where it came from.
+  const [consultingSource, setConsultingSource] = useState<string | null>(null);
 
   useReveal();
 
@@ -35,7 +39,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header onEnquire={() => setConsultingSource('header')} />
 
       <main className="flex-1">
         <YouTubeShowcase />
@@ -49,13 +53,23 @@ export default function App() {
         <StackReadout />
         <AppCatalogSection />
         <SelfHostCE />
+        <ConsultingSection onEnquire={() => setConsultingSource('consulting_section')} />
       </main>
 
-      <Footer onFeedback={() => setFeedbackOpen(true)} onReview={() => setReviewOpen(true)} />
+      <Footer
+        onFeedback={() => setFeedbackOpen(true)}
+        onReview={() => setReviewOpen(true)}
+        onEnquire={() => setConsultingSource('footer')}
+      />
 
       <ChatPopup />
       <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       <DeveloperReviewModal isOpen={reviewOpen} onClose={() => setReviewOpen(false)} />
+      <ConsultingModal
+        isOpen={consultingSource !== null}
+        onClose={() => setConsultingSource(null)}
+        source={consultingSource ?? 'landing-page'}
+      />
     </div>
   );
 }

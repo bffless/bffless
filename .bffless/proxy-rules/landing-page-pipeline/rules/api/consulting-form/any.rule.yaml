@@ -1,0 +1,87 @@
+targetUrl: ""
+order: 12
+pipeline:
+  name: Consulting Enquiry Handler
+  description: "Done-for-you setup enquiries from the landing page CTA."
+  steps:
+    - id: consulting_form_validation
+      name: form_validation
+      handler: form_handler
+      config:
+        fields:
+          name:
+            type: string
+            required: true
+          email:
+            type: email
+            required: true
+          message:
+            type: string
+            required: true
+        honeypotField: website
+      isEnabled: true
+    - id: consulting_create_record
+      name: create record
+      handler: data_create
+      config:
+        fields:
+          name: request.body.name
+          email: request.body.email
+          project_type: request.body.project_type
+          message: request.body.message
+          source: request.body.source
+        schemaId: $schema:consulting
+      isEnabled: true
+    - id: consulting_send_email
+      name: send email
+      handler: email_handler
+      config:
+        to: james.charlesworth@bffless.com
+        body: |-
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { border-bottom: 2px solid #D85A3D; padding-bottom: 10px; margin-bottom: 20px; }
+              .field { margin-bottom: 15px; }
+              .label { font-weight: 600; color: #555; }
+              .value { margin-top: 5px; }
+              .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 12px; color: #888; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>New consulting enquiry</h2>
+              </div>
+
+              <div class="field">
+                <div class="label">Name</div>
+                <div class="value">{{request.body.name}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Email</div>
+                <div class="value">{{request.body.email}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">What they need</div>
+                <div class="value">{{request.body.project_type}}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Message</div>
+                <div class="value">{{request.body.message}}</div>
+              </div>
+
+              <div class="footer">
+                Submitted from {{request.body.source}} on {{metadata.path}} via {{metadata.method}}
+              </div>
+            </div>
+          </body>
+          </html>
+        subject: New consulting enquiry from {{ request.body.name }}
+      isEnabled: true
