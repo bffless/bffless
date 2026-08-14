@@ -108,7 +108,7 @@ export default function ConsultingModal({ isOpen, onClose, source = 'landing-pag
 
       setIsSubmitted(true);
     } catch {
-      setError('Something went wrong. Please try again, or email james.charlesworth@bffless.com directly.');
+      setError('Something went wrong sending that. Please try again in a moment.');
     } finally {
       setIsSubmitting(false);
     }

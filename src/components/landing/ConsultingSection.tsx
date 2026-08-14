@@ -64,13 +64,7 @@ export default function ConsultingSection({ onEnquire }: ConsultingSectionProps)
                 </button>
               </div>
               <p className="mt-4 text-[13px] text-ink-soft">
-                Prefer email?{' '}
-                <a
-                  href="mailto:james.charlesworth@bffless.com?subject=Setting%20up%20BFFless"
-                  className="text-ink underline underline-offset-2 hover:text-terracotta transition-colors"
-                >
-                  james.charlesworth@bffless.com
-                </a>
+                Goes straight to me. I'll reply by email, usually within a couple of days.
               </p>
             </div>
           </div>
