@@ -1,0 +1,17 @@
+name: consulting
+fields:
+  - name: name
+    type: string
+    required: true
+  - name: email
+    type: email
+    required: true
+  - name: project_type
+    type: string
+    required: false
+  - name: message
+    type: string
+    required: true
+  - name: source
+    type: string
+    required: false
