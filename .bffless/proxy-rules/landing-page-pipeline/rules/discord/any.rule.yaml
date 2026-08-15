@@ -1,0 +1,48 @@
+# /discord → the community Discord invite.
+#
+# The footer and the feedback modal have always linked to bffless.dev/discord, but the
+# rule behind it only ever existed live on the old instance — it was never in git, so
+# adopting this set as code (synced with --prune) removed it and the link started 404ing.
+# It lives here now, so it survives the next sync.
+#
+# HEAD is included alongside GET because link unfurlers (Slack, Discord itself) preflight
+# with HEAD, and a method-scoped rule 404s anything it doesn't list.
+#
+# The Location must be a *never-expiring* invite — Discord's default is a 7-day link, and
+# this URL is printed in the footer, the docs and llms.txt, so an expiring one silently
+# turns into a dead end. Check with:
+#   curl -s https://discord.com/api/v10/invites/<code> | grep expires_at   # want: null
+methods:
+  - GET
+  - HEAD
+targetUrl: ""
+stripPrefix: false
+order: 13
+description: 302 redirect from /discord to the community Discord invite.
+pipeline:
+  name: discord_invite_redirect
+  description: Single response_handler step returning 302 + Location. The HTML body is only
+    ever seen by a client that ignores the redirect, so it carries the same link.
+  steps:
+    - id: redirect
+      name: redirect
+      handler: response_handler
+      config:
+        status: 302
+        headers:
+          Location: https://discord.gg/bj3XfBhH
+          Cache-Control: no-cache, no-store, must-revalidate
+        contentType: text/html; charset=utf-8
+        body: |-
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <title>BFFless on Discord</title>
+              <meta http-equiv="refresh" content="0; url=https://discord.gg/bj3XfBhH" />
+            </head>
+            <body>
+              <p>Redirecting to the BFFless Discord — <a href="https://discord.gg/bj3XfBhH">discord.gg/bj3XfBhH</a>.</p>
+            </body>
+          </html>
+      isEnabled: true
