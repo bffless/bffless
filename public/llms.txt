@@ -4,71 +4,146 @@
 
 ## Overview
 
-BFFless is a self-hosted, open-source platform that gives static frontends real backend capabilities. It's the home for the apps, internal tools, and HTML docs your team (and your AI coding agents) generate — somewhere they can actually live, with a backend and access control, behind your corporate boundary. It provides the infrastructure typically built into managed platforms - but you own and control everything. Technical framing for those who know the category: a self-hosted Supabase/Appwrite aimed at static sites and internal apps.
+BFFless is GitHub Pages with auth, a proxy, and a BFF. It's a self-hostable static hosting platform that wraps an immutable, SHA-keyed deploy with SSO/RBAC, a CORS-free reverse proxy to your own APIs, a no-code server-side pipeline runtime, and pluggable storage. It's where the HTML apps your AI agents produce, your internal tools, SPAs, Storybooks and docs can actually live — behind auth, inside your network. Technical framing for those who know the category: a self-hosted Supabase/Appwrite aimed at static sites and internal apps.
 
 - Website: https://bffless.dev
-- Documentation: https://docs.bffless.app
-- Full LLM Documentation: https://docs.bffless.app/llms.txt
+- Documentation: https://docs.bffless.dev
+- Full LLM Documentation: https://docs.bffless.dev/llms.txt
+- App store: https://apps.bffless.dev
+- Live feature demo: https://demo.bffless.dev
+- Chat demo: https://chat.bffless.dev
+- Video episodes: https://www.youtube.com/@bffless — searchable transcripts at https://recall.bffless.dev
 - GitHub: https://github.com/bffless/ce
-- License: O'Saasy
+- License: O'Saasy (free for personal and commercial use)
+
+Note on domains: the project moved from `bffless.app` to **`bffless.dev`**. `bffless.app` and `docs.bffless.app` redirect, but `bffless.dev` / `docs.bffless.dev` are canonical — use those.
 
 ## What is BFFless?
 
-BFFless serves as a "Backend for Frontend" without the backend boilerplate. Host AI-generated apps, internal tools, HTML docs, SPAs, and frontend assets — deployed from your CI/CD pipeline — with features that typically require custom infrastructure:
+The static-hosting half is the easy bit — GitHub Pages, Cloudflare Pages or an S3 bucket will do it. The hard bit is everything between the browser and the bucket: who can see it, what it can talk to, and how it ships. BFFless is the three primitives that sit there:
 
-- **Home for AI-generated apps & internal tools**: Host the HTML apps, dashboards, and docs your AI agents and teams produce, behind auth
-- **Static Asset Hosting**: Upload build artifacts from GitHub Actions
-- **Traffic Splitting**: A/B testing and canary deployments
-- **Proxy Rules**: Forward API requests without CORS headaches
-- **Custom Domains**: Dynamic domain mapping with SSL
-- **Deployment Aliases**: Named versions (production, staging, canary)
-- **Multiple Storage Backends**: S3, GCS, Azure, MinIO, or local
+1. **Self-host — your box.** One docker-compose stack (nginx, NestJS backend, React admin, PostgreSQL, SuperTokens) on a $6 droplet. Five storage adapters (S3, GCS, Azure, MinIO, local FS) swap by env var. No telemetry, no usage cap, no per-seat pricing.
+2. **Auth — the missing layer.** Every deployment can sit behind SuperTokens: sessions, JWT, JWKS, Google OAuth in-box, and a pluggable seam for Okta, Azure AD or your own OIDC. Two-tier RBAC underneath; share links for one-off external review.
+3. **BFF — proxy + pipelines.** Proxy rule sets per alias forward `/api/*` to any backend with no CORS fight, and a server-side pipeline runtime (form, data, email, HTTP, AI, function, file and other handlers) gives a static frontend a real backend without a Node service.
 
 ## Quick Start
 
-```bash
-# Clone and configure
-git clone https://github.com/bffless/ce.git && cd ce
-cp .env.example .env
-echo "ENCRYPTION_KEY=$(openssl rand -base64 32)" >> .env
+Install with the script (it installs Docker if needed, configures SSL, generates secrets):
 
-# Start
-./start.sh
+```bash
+INSTALL_DIR=/opt/bffless sh -c "$(curl -fsSL https://bffless.dev/install.sh)"
+cd /opt/bffless && ./start.sh
 ```
 
-Access admin at `https://admin.yourdomain.com`, create an API key, deploy:
+Then open `https://admin.yourdomain.com`, finish the setup wizard, create an API key, and deploy from CI:
 
 ```yaml
 - uses: bffless/upload-artifact@v1
   with:
-    api-url: ${{ secrets.BFFLESS_URL }}
+    path: dist
+    api-url: ${{ vars.BFFLESS_URL }}
     api-key: ${{ secrets.BFFLESS_API_KEY }}
-    files: dist/**/*
+    alias: production
 ```
+
+That's the integration — build in CI, upload an immutable artifact keyed by commit SHA, point an alias at it. The next push doesn't replace it; it stacks beside it, and rollback is moving an alias pointer.
+
+Setup guides: https://docs.bffless.dev/getting-started/quickstart/ · Cloudflare SSL: https://docs.bffless.dev/getting-started/cloudflare-setup/ · Let's Encrypt: https://docs.bffless.dev/getting-started/letsencrypt-setup/
 
 ## Key Features
 
-### Traffic Splitting
-Split traffic across deployments for A/B testing or canary releases. Configure percentage weights, sticky sessions, and override rules.
+- **Home for AI-generated apps & internal tools**: host the HTML apps, dashboards and docs your agents and teams produce, behind SSO
+- **Static asset hosting**: immutable, SHA-keyed deploys uploaded from CI/CD
+- **Auth & two-tier RBAC**: global roles for tenancy, per-project roles for the deploy; explicit membership, 403 otherwise
+- **Proxy rules**: forward API requests to backend services without CORS; per-project defaults with per-alias overrides
+- **Pipelines**: backend workflows (forms, DB records, email, outbound HTTP, custom JS) by chaining handlers — no server code
+- **AI pipelines & chat**: streaming chat with OpenAI, Anthropic or Google AI, message persistence, and deployable skills
+- **App catalog**: one-click install of ready-made open-source apps onto your own instance
+- **Traffic splitting**: weighted A/B tests and canary rollouts with sticky sessions
+- **Deployment aliases**: named pointers (production, staging, canary, `pr-123`) to specific commits
+- **Custom domains**: dynamic domain mapping with automatic SSL
+- **Share links**: token-scoped access to private deployments, no account needed
+- **Cache rules**: per-path CDN/browser cache headers
+- **Multiple storage backends**: S3, GCS, Azure Blob, MinIO, local filesystem, or S3-compatible (Spaces, R2, B2)
+- **GitHub Actions**: official upload/download artifact actions
 
-Live demo: https://demo.docs.bffless.app
+## Pipelines & Rules as Code
 
-### Proxy Rules
-Forward `/api/*` requests to backend services. Eliminates CORS configuration. Supports header injection and per-environment overrides.
+A pipeline is a chain of handlers bound to a route — `form_handler` → `data_create` → `email_handler` → `response_handler` is a working contact form with no server. The handler vocabulary covers data (`data_create`, `data_query`, `data_update`, `data_delete`, `data_upsert_many`, `db_aggregate`), files (`file_upload_handler`, `file_serve_handler`, `presigned_upload`, `signed_url`, `file_delete`), media (`ffmpeg_handler`, `image_convert_handler`), AI and search (`ai_handler`, `embed_store`, `vector_search`), integrations (`http_request`, `email_handler`, `github_api`, `google_calendar`, `stripe_checkout`, `stripe_webhook`, `xml_feed_parse`), and control (`function_handler`, `delay`, `response_handler`). Data lives in DB Records (schemas with typed fields, auto `id`/`createdAt`/`updatedAt`), and `{{expression}}` syntax passes values between steps (`{{input.email}}`, `{{steps.createRecord.id}}`, `{{user.email}}`).
 
-### Deployment Aliases
-Named references to specific commits. Point `production` at a stable release while `staging` tracks the latest build.
+Rule sets don't have to be clicked together in a dashboard. With the `bffless` CLI they live as YAML plus real `.fn.js` handler files under `.bffless/proxy-rules/` in your repo — diffable, testable, and reviewed in a PR:
 
-### Multiple Storage Backends
-Pluggable storage: AWS S3, Google Cloud Storage, Azure Blob, MinIO (self-hosted), or S3-compatible services (DigitalOcean Spaces, Cloudflare R2, Backblaze B2).
+```
+.bffless/
+  config.json                       # apiUrl · project · ruleSets
+  proxy-rules/<set>/
+    ruleset.yaml
+    schemas/feedback.schema.yaml    # referenced by name, never UUID
+    rules/api/feedback-form/any.rule.yaml
+```
 
-## Tech Stack
+`bffless rules diff` fails a PR that has drifted from live; `bffless rules push --prune` on merge makes the server match the branch. This site's own backend is authored that way: https://github.com/bffless/bffless/tree/main/.bffless/proxy-rules
 
-- **Backend**: NestJS, TypeScript, Drizzle ORM, PostgreSQL
-- **Frontend**: React 18, Vite, Redux Toolkit, TailwindCSS
-- **Auth**: SuperTokens (self-hosted)
-- **Proxy**: nginx with dynamic configuration
-- **Container**: Docker Compose
+Docs: https://docs.bffless.dev/features/pipelines/ · https://docs.bffless.dev/features/ai-pipelines/ · https://docs.bffless.dev/recipes/proxy-rules-as-code/
+
+## App Catalog
+
+Ready-made open-source apps that install in one click from **Admin → Apps** onto your own instance — the frontend and its pipeline rule sets deploy together onto an alias you choose. Each app's backend is a reviewable rule set on your server, not someone else's. Updates are one click; every app is forkable. Requires CE ≥ 0.4.0.
+
+| App | What it does |
+|-----|--------------|
+| **Handoff** | Internal file server: per-folder access control, share links for people outside the team, margin comments, and uploaded static bundles served back as live Sites |
+| **Studio** | Turns a long screen recording into a short video in your own recorded voice — AI proposes the cuts, you tune them scene by scene |
+| **Rivulet** | Quiet, multi-user RSS/Atom reader: folders, a river of unread items, stars, keyboard-first triage, OPML import, background refresh by scheduled pipelines |
+| **Recall** | Semantic search and RAG chat over a video library — every hit deep-links to the exact second on YouTube. Live at https://recall.bffless.dev |
+
+Browse: https://apps.bffless.dev · How installs work: https://docs.bffless.dev/features/app-catalog/
+
+## Architecture
+
+Every request flows through the same five layers — edge routing, auth checkpoint, pipeline runtime, BFF proxy, storage. The static artifact at the bottom is the GitHub-Pages-equivalent half; the four layers above it are the BFF server. Nothing in the request path leaves your network.
+
+```
+Internet → nginx (TLS, SPA fallback) → NestJS backend (auth · pipelines · proxy) → S3/GCS/Azure/MinIO/local
+```
+
+### Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Backend | NestJS · TypeScript |
+| Frontend | React · Vite · Redux Toolkit (RTK Query) · Tailwind |
+| Database | PostgreSQL · Drizzle ORM |
+| Auth | SuperTokens · JWT · OAuth |
+| Storage | Local · MinIO · S3 · GCS · Azure |
+| Edge | nginx · TLS · Let's Encrypt or Cloudflare |
+| Orchestration | Docker Compose · single host |
+| Observability | Vector · TimescaleDB · Grafana (optional) |
+
+## Security & Access Control
+
+- Two-tier RBAC: system-wide global roles plus per-project roles; membership is explicit, and visitors without one get a 403
+- API keys scoped per project for CI/CD; share links for one-off external review
+- Deployments are immutable and SHA-keyed — you can't rewrite a deploy, only point an alias somewhere else, so the audit trail is free
+- Proxy targets must be HTTPS; SSRF protection blocks internal IPs; header values and AI provider keys are encrypted at rest (AES-256-GCM)
+- Back up `ENCRYPTION_KEY`, and set `COOKIE_SECURE=true` in production
+
+Details: https://docs.bffless.dev/reference/security/
+
+## How It Compares
+
+| Capability | BFFless CE | GitHub Pages | Vercel · Netlify | Cloudflare Pages |
+|---|---|---|---|---|
+| SSO / RBAC in front of the site | Yes | No | Limited | Workers code |
+| Reverse proxy to any backend (no CORS) | Yes | No | Limited | Via workers |
+| Custom domain + auto SSL | Yes | No | Yes | Yes |
+| Server-side pipelines (BFF, no code) | Yes | No | No | No |
+| Self-host in your VPC / on-prem | Yes | Enterprise Server only | No (managed) | No (managed) |
+| Immutable, SHA-keyed deploys | Yes | No | Yes | Yes |
+| Preview deployment per PR | Yes | Limited | Yes | Yes |
+| Instant rollback by alias pointer | Yes | No | Rolling redeploy | Rolling redeploy |
+| GitHub Action · push to deploy | Yes | Yes | Yes | Yes |
+| Free forever, no usage cap | Yes | Yes | Free-tier limits | Free-tier limits |
 
 ## Requirements
 
@@ -78,57 +153,60 @@ Pluggable storage: AWS S3, Google Cloud Storage, Azure Blob, MinIO (self-hosted)
 | Disk | 20GB | 40GB |
 | CPU | 1 vCPU | 2 vCPU |
 
-Works on any Linux server. $5-10/month VPS from DigitalOcean, Linode, or Hetzner is sufficient.
-
-## SSL Options
-
-**Cloudflare (Recommended)**: 15-year certificates, DDoS protection, CDN included.
-
-**Let's Encrypt**: Auto-renewing certificates, direct connection, requires port 80.
+Works on any Linux server; a $5–10/month VPS from DigitalOcean, Linode or Hetzner is enough. **SSL**: Cloudflare (recommended — 15-year origin certificates, DDoS protection, CDN, no port 80) or Let's Encrypt (auto-renewing, direct connection, needs port 80).
 
 ## Use Cases
 
-- **Preview Deployments**: Every PR gets a unique URL
-- **A/B Testing**: Split traffic 50/50 between variants
-- **Canary Releases**: Gradual rollout (5% -> 20% -> 50% -> 100%)
-- **Personalized Content**: Custom versions for specific audiences
-- **Feature Flags**: Serve different configurations per environment
-- **Coverage Reports**: Host test artifacts with permanent URLs
+- **AI-generated apps & internal tools**: agent-produced HTML apps, dashboards and admin panels on a subdomain, behind SSO
+- **Engineering docs**: Docusaurus, VitePress, MkDocs, mdBook — versioned per branch, instant rollback
+- **Storybook & design systems**: publish every PR so designers and PMs can browse before merge
+- **API reference sites**: Redoc, Scalar, Stoplight, hand-rolled OpenAPI HTML — gated to staff
+- **CI artifacts**: coverage reports, Lighthouse runs, Playwright traces linked from the PR check
+- **Runbooks & onboarding**: RBAC-gated ops content without the SaaS-of-the-month
+- **Preview deployments**: every PR gets a unique URL
+- **A/B tests, canary releases, feature flags**: weighted traffic splitting across aliases
 
 ## Documentation
 
-For comprehensive documentation including API reference, configuration options, storage setup guides, and security best practices:
-
-- **Full Documentation**: https://docs.bffless.app
-- **LLM-Optimized Docs**: https://docs.bffless.app/llms.txt
+- **Full documentation**: https://docs.bffless.dev
+- **LLM-optimized docs**: https://docs.bffless.dev/llms.txt
 
 ### Quick Links
 
-- [Quick Start Guide](https://docs.bffless.app/getting-started/quickstart)
-- [Architecture Overview](https://docs.bffless.app/reference/architecture)
-- [API Reference](https://docs.bffless.app/reference/api)
-- [Traffic Splitting](https://docs.bffless.app/features/traffic-splitting)
-- [Proxy Rules](https://docs.bffless.app/features/proxy-rules)
-- [Storage Backends](https://docs.bffless.app/storage/overview)
-- [Environment Variables](https://docs.bffless.app/configuration/environment-variables)
-- [Security](https://docs.bffless.app/reference/security)
+- [Quick Start Guide](https://docs.bffless.dev/getting-started/quickstart/)
+- [Architecture Overview](https://docs.bffless.dev/reference/architecture/)
+- [API Reference](https://docs.bffless.dev/reference/api/)
+- [Pipelines](https://docs.bffless.dev/features/pipelines/)
+- [AI Pipelines](https://docs.bffless.dev/features/ai-pipelines/)
+- [Chat](https://docs.bffless.dev/features/chat/)
+- [Proxy Rules](https://docs.bffless.dev/features/proxy-rules/)
+- [Rules as Code](https://docs.bffless.dev/recipes/proxy-rules-as-code/)
+- [App Catalog](https://docs.bffless.dev/features/app-catalog/)
+- [Traffic Splitting](https://docs.bffless.dev/features/traffic-splitting/)
+- [Storage Backends](https://docs.bffless.dev/storage/overview/)
+- [Environment Variables](https://docs.bffless.dev/configuration/environment-variables/)
+- [Deployment](https://docs.bffless.dev/deployment/overview/)
+- [Security](https://docs.bffless.dev/reference/security/)
+- [Troubleshooting](https://docs.bffless.dev/troubleshooting/)
 
 ## GitHub Actions
 
-Official actions for CI/CD integration:
+- [bffless/upload-artifact](https://github.com/marketplace/actions/bffless-upload-artifact) — zip a build directory and upload it as a deployment
+- [bffless/download-artifact](https://github.com/marketplace/actions/bffless-download-artifact) — download a previous deployment's artifact
 
-- [bffless/upload-artifact](https://github.com/marketplace/actions/bffless-upload-artifact) - Upload build artifacts
-- [bffless/download-artifact](https://github.com/marketplace/actions/bffless-download-artifact) - Download artifacts
+## Agent Skills
 
-## Community
+`@bffless/skills` gives AI coding agents domain knowledge of BFFless — pipelines, proxy rules, rules-as-code, chat, auth, traffic splitting and more. Install with `npx skills add bffless/skills`, or as a Claude Code plugin. Source: https://github.com/bffless/skills
 
-- [GitHub Issues](https://github.com/bffless/ce/issues) - Bug reports and feature requests
-- [GitHub Discussions](https://github.com/bffless/ce/discussions) - Questions and ideas
+## Community & Support
+
+- [GitHub Issues](https://github.com/bffless/ce/issues) — bug reports and feature requests
+- **Done-for-you setup**: if you'd rather not touch a server, the author will install BFFless, move your site across, and get your domain working — enquire at https://bffless.dev/#setup
 
 ## License
 
-O'Saasy License - Free for personal and commercial use.
+O'Saasy License — free for personal and commercial use. Source-available at https://github.com/bffless/ce
 
 ---
 
-For detailed technical documentation optimized for LLM consumption, see: https://docs.bffless.app/llms.txt
+For detailed technical documentation optimized for LLM consumption, see: https://docs.bffless.dev/llms.txt
