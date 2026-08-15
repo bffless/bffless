@@ -30,7 +30,7 @@ pipeline:
       config:
         status: 302
         headers:
-          Location: https://discord.gg/bj3XfBhH
+          Location: https://discord.gg/hQz9scbq5x
           Cache-Control: no-cache, no-store, must-revalidate
         contentType: text/html; charset=utf-8
         body: |-
@@ -39,10 +39,10 @@ pipeline:
             <head>
               <meta charset="utf-8" />
               <title>BFFless on Discord</title>
-              <meta http-equiv="refresh" content="0; url=https://discord.gg/bj3XfBhH" />
+              <meta http-equiv="refresh" content="0; url=https://discord.gg/hQz9scbq5x" />
             </head>
             <body>
-              <p>Redirecting to the BFFless Discord — <a href="https://discord.gg/bj3XfBhH">discord.gg/bj3XfBhH</a>.</p>
+              <p>Redirecting to the BFFless Discord — <a href="https://discord.gg/hQz9scbq5x">discord.gg/hQz9scbq5x</a>.</p>
             </body>
           </html>
       isEnabled: true
