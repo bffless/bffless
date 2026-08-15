@@ -1,0 +1,24 @@
+# Mirror of youtube-subscriber-watch/schemas/youtube_subscribers.schema.yaml.
+# Schemas are project-level and resolve by NAME, so both sets address the same
+# live table — but `rules validate` requires a manifest in every set that
+# references it, hence the copy. The watch set owns the writes; the
+# /api/youtube/subscribers rule here only reads (as a YouTube-outage fallback).
+# Push never rewrites an existing live schema's fields, so keep the two in sync
+# by hand if the fields ever change.
+name: youtube_subscribers
+fields:
+  - name: count
+    type: number
+    required: true
+  - name: previous
+    type: number
+    required: false
+  - name: delta
+    type: number
+    required: false
+  - name: channel
+    type: string
+    required: false
+  - name: fired_at
+    type: datetime
+    required: false

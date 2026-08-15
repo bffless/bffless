@@ -1,0 +1,89 @@
+handler: ./shape.fn.js
+cases:
+  - name: parses a live YouTube reading
+    data:
+      request: { query: {} }
+      steps:
+        fetch:
+          ok: true
+          body: { items: [{ statistics: { subscriberCount: '1230' } }] }
+        last: { count: 1200 }
+    expect:
+      result:
+        ok: true
+        count: 1230
+        source: youtube
+        textOk: false
+        textErr: false
+        jsonOk: true
+        jsonErr: false
+
+  - name: falls back to the stored reading when YouTube is unreachable
+    data:
+      request: { query: {} }
+      steps:
+        fetch: { ok: false }
+        last: { count: 1200 }
+    expect:
+      result:
+        ok: true
+        count: 1200
+        source: cache
+        textOk: false
+        textErr: false
+        jsonOk: true
+        jsonErr: false
+
+  - name: format=text routes to the plain-text branch
+    data:
+      request: { query: { format: 'text' } }
+      steps:
+        fetch:
+          ok: true
+          body: { items: [{ statistics: { subscriberCount: '1230' } }] }
+        last: null
+    expect:
+      result:
+        ok: true
+        count: 1230
+        source: youtube
+        textOk: true
+        textErr: false
+        jsonOk: false
+        jsonErr: false
+
+  - name: reports unavailable when YouTube fails and nothing is stored
+    data:
+      request: { query: { format: 'text' } }
+      steps:
+        fetch: { ok: false }
+        last: null
+    expect:
+      result:
+        ok: false
+        count: null
+        source: null
+        textOk: false
+        textErr: true
+        jsonOk: false
+        jsonErr: false
+
+  - name: treats a hidden subscriber count as no live reading
+    data:
+      request: { query: {} }
+      steps:
+        fetch:
+          ok: true
+          body:
+            items:
+              - statistics: { hiddenSubscriberCount: true, subscriberCount: '0' }
+        last: { count: 1200 }
+    expect:
+      result:
+        ok: true
+        count: 1200
+        source: cache
+        textOk: false
+        textErr: false
+        jsonOk: true
+        jsonErr: false

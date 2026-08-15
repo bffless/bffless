@@ -1,0 +1,95 @@
+targetUrl: pipeline
+order: 14
+description: >-
+  Public read-only subscriber count for the @bffless YouTube channel, for
+  wall displays and dashboards. GET /api/youtube/subscribers returns JSON;
+  ?format=text returns the bare number as text/plain so a microcontroller can
+  read it without a JSON parser. Falls back to the newest reading stored by the
+  hourly youtube-subscriber-watch cron when the YouTube API is unavailable.
+timeout: 15000
+pipeline:
+  name: youtube_subscriber_count
+  description: >-
+    fetch (channels.list, failOnError:false) -> last (newest stored row, the
+    fallback) -> shape (parse, pick a source, flatten the response matrix) ->
+    one of four response branches: text/JSON x ok/unavailable.
+  steps:
+    - name: fetch
+      handler: http_request
+      config:
+        url: https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=bffless
+        method: GET
+        timeout: 8000
+        failOnError: false
+        headers:
+          X-Goog-Api-Key: secrets.YOUTUBE_API_KEY
+
+    # No orderBy: the default is createdAt DESC, which is exactly "newest
+    # reading". (An explicit orderBy on a data field sorts the JSONB value as
+    # TEXT — sorting by count would be lexicographic, not numeric.)
+    - name: last
+      handler: data_query
+      config:
+        schemaId: $schema:youtube_subscribers
+        single: true
+        limit: 1
+
+    - name: shape
+      handler: function_handler
+      code: shape.fn.js
+
+    - name: respond_text
+      handler: response_handler
+      config:
+        condition: steps.shape.textOk
+        status: 200
+        contentType: text/plain; charset=utf-8
+        body: "{{steps.shape.count}}"
+        headers:
+          # 60s is enough to keep a chatty display off the YouTube quota
+          # (10k units/day; channels.list costs 1) without the number ever
+          # looking stuck — the cron behind the fallback only runs hourly.
+          Cache-Control: public, max-age=60
+          Access-Control-Allow-Origin: "*"
+
+    # -1 is the sentinel for "no reading available" in text mode: firmware that
+    # only does atoi() gets a value it can recognise and ignore.
+    - name: respond_text_unavailable
+      handler: response_handler
+      config:
+        condition: steps.shape.textErr
+        status: 503
+        contentType: text/plain; charset=utf-8
+        body: "-1"
+        headers:
+          Cache-Control: no-store
+          Access-Control-Allow-Origin: "*"
+
+    - name: respond_json
+      handler: response_handler
+      config:
+        condition: steps.shape.jsonOk
+        status: 200
+        contentType: application/json
+        body:
+          ok: true
+          channel: '"bffless"'
+          count: steps.shape.count
+          source: steps.shape.source
+          fetchedAt: now()
+        headers:
+          Cache-Control: public, max-age=60
+          Access-Control-Allow-Origin: "*"
+
+    - name: respond_json_unavailable
+      handler: response_handler
+      config:
+        condition: steps.shape.jsonErr
+        status: 503
+        contentType: application/json
+        body:
+          ok: false
+          error: '"subscriber_count_unavailable"'
+        headers:
+          Cache-Control: no-store
+          Access-Control-Allow-Origin: "*"
