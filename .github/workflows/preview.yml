@@ -13,6 +13,18 @@ name: Preview on BFFless
 # `landing-episodes` set via a missing name suffix.
 on:
   pull_request:
+    # Disjoint from deploy-studio.yml / preview-studio.yml's `paths:` — a
+    # studio-only PR gets a studio preview, not a landing one. Kept in lockstep
+    # with cleanup-preview.yml so a landing preview is only ever torn down by
+    # the same filter that created it.
+    #
+    # Note pnpm-lock.yaml is deliberately absent from this list: it is the
+    # LANDING site's lockfile and nothing else, because studio/ is a standalone
+    # package owning studio/pnpm-lock.yaml. See build.yml for why that matters.
+    paths-ignore:
+      - 'studio/**'
+      - '.github/workflows/deploy-studio.yml'
+      - '.github/workflows/preview-studio.yml'
 
 permissions:
   contents: read

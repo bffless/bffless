@@ -1,11 +1,23 @@
 name: Preview studio
 
+# Credentials: this repo already has vars.LANDING_ASSET_HOST_URL /
+# secrets.LANDING_ASSET_HOST_KEY for the landing site. These workflows keep the
+# names @bffless/workflow generated (vars.BFFLESS_URL / secrets.BFFLESS_API_KEY)
+# ON PURPOSE rather than reusing the landing pair: the studio implementation
+# publishes to a different surface (a workflow alias + its rule set under the
+# `workflow` harness), so it deserves a key whose blast radius can be scoped and
+# rotated independently of the landing site's. Both are NEW and must be set
+# before the first deploy — see the PR description's maintainer TODO.
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
     paths:
       - 'studio/**'
       - '.github/workflows/preview-studio.yml'
+
+permissions:
+  contents: read
 
 concurrency:
   # Flow-style `{ group: preview-${{ ... }} }` is genuinely ambiguous YAML (a
@@ -21,10 +33,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: pnpm }
+        with:
+          node-version: '20'
+          cache: pnpm
+          # studio/ is a STANDALONE package, not a workspace member — it carries
+          # its own lockfile so that a studio dependency bump never touches the
+          # root pnpm-lock.yaml the landing site's CI keys off. See the comment
+          # in .github/workflows/build.yml.
+          cache-dependency-path: studio/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+        working-directory: studio
       # The bundle must say which implementation it is (needs @bffless/workflow-lint >= 1.0.1).
-      - run: "pnpm --filter ./studio run build --impl studio-pr-${{ github.event.number }} --name 'Studio (PR #${{ github.event.number }})'"
+      - run: "pnpm run build --impl studio-pr-${{ github.event.number }} --name 'Studio (PR #${{ github.event.number }})'"
+        working-directory: studio
+      # After build, not before: several suites are `it.skipIf(!existsSync(dist/...))`
+      # assertions about the built bundle, and silently skip if dist/ is absent.
+      - run: pnpm run test:run
+        working-directory: studio
       - uses: bffless/publish-workflow@v1
         with:
           alias: studio-pr-${{ github.event.number }}

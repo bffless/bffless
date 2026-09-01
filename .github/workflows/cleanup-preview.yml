@@ -2,6 +2,13 @@ name: Cleanup PR Preview
 on:
   pull_request:
     types: [closed]
+    # Same filter as preview.yml, so cleanup runs exactly for the PRs that got a
+    # landing preview. studio previews are torn down by preview-studio.yml's own
+    # `teardown` job.
+    paths-ignore:
+      - 'studio/**'
+      - '.github/workflows/deploy-studio.yml'
+      - '.github/workflows/preview-studio.yml'
 permissions:
   contents: read
 

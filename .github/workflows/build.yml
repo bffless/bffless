@@ -3,6 +3,23 @@ name: Build & Upload
 on:
   push:
     branches: ['main']
+    # `studio/` is a STANDALONE package (no pnpm workspace), deployed by
+    # deploy-studio.yml. A studio-only push must not rebuild + redeploy the
+    # landing site: this job runs deploy-proxy-rules with prune:true and
+    # upload-artifact against the LIVE landing-production alias.
+    #
+    # This holds only because the two packages have SEPARATE lockfiles. Were
+    # studio a workspace member, the single root pnpm-lock.yaml would carry a
+    # `studio` importer, so a studio dependency bump would touch studio/** (
+    # ignored here) AND pnpm-lock.yaml (matched by no filter on either side) —
+    # and this job would fire on it. studio/ therefore owns
+    # studio/pnpm-lock.yaml, and the root lockfile stays landing-only.
+    #
+    # Keep this list and the studio workflows' `paths:` disjoint.
+    paths-ignore:
+      - 'studio/**'
+      - '.github/workflows/deploy-studio.yml'
+      - '.github/workflows/preview-studio.yml'
   workflow_dispatch:
 
 permissions:
