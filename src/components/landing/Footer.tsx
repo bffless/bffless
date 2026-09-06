@@ -1,7 +1,10 @@
+import { trackConversion } from '../../hooks/useAnalytics';
 interface FooterLink {
   label: string;
   href?: string;
   onClick?: () => void;
+  /** Conversion event to fire on click (kept in parity across A/B arms). */
+  track?: string;
 }
 
 interface FooterProps {
@@ -28,7 +31,7 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
       links: [
         { href: 'https://docs.bffless.app/', label: 'Documentation' },
         { href: 'https://apps.bffless.dev/', label: 'App store' },
-        { href: 'https://github.com/bffless/ce', label: 'GitHub · CE' },
+        { href: 'https://github.com/bffless/ce', label: 'GitHub · CE', track: 'github_clicked' },
         { href: 'https://docs.bffless.app/getting-started/quickstart/', label: 'Quickstart' },
         { href: 'https://bffless.dev/discord', label: 'Discord' },
       ],
@@ -68,7 +71,10 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
               {col.links.map((link) => (
                 <li key={link.label}>
                   {link.href ? (
-                    <a href={link.href} className="text-[13px] text-ink-soft hover:text-ink transition-colors">
+                    <a
+                      href={link.href}
+                      onClick={link.track ? () => trackConversion(link.track!, { source: 'footer' }) : undefined}
+                      className="text-[13px] text-ink-soft hover:text-ink transition-colors">
                       {link.label}
                     </a>
                   ) : (

@@ -45,7 +45,7 @@ export function trackConversion(
   const variant = getVariant();
 
   const metadata = {
-    variant: variant || 'unknown',
+    variant: variant || 'unassigned',
     ...additionalMetadata,
   };
 
