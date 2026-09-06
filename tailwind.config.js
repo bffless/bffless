@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+
+// Variant B — "Product tour". Pure white page, coffee panels, rounded cards,
+// Archivo display type. Token names are unchanged from the control design so
+// the shared modals and chat components re-theme without edits.
 export default {
   content: [
     './index.html',
@@ -11,42 +15,47 @@ export default {
     extend: {
       colors: {
         paper: {
-          DEFAULT: '#ECE3D2',
-          deep: '#E4D9C4',
-          line: '#D5C8AE',
+          DEFAULT: '#FFFFFF',
+          deep: '#F5F1E8',
+          line: '#E6E0D4',
+          edge: '#D6CFC2',
         },
         ink: {
-          DEFAULT: '#171513',
-          soft: '#3A352E',
-          // `label` is the accessible floor for small mono labels on the paper
-          // ramp: ~6:1 on paper, ~5.6:1 on paper-deep (WCAG AA for small text).
-          // `mute` (#7A7268, ~3.7:1) stays for decorative/illustrative use only.
-          label: '#5A5046',
-          mute: '#7A7268',
-          faint: '#A9A095',
+          DEFAULT: '#1C1917',
+          soft: '#57534E',
+          label: '#57534E',
+          mute: '#78716C',
+          faint: '#A8A29E',
         },
         terracotta: {
-          DEFAULT: '#D85A3D',
-          hover: '#C24E33',
-          ink: '#7A2D1D',
+          DEFAULT: '#D63B2F',
+          hover: '#B82E24',
+          ink: '#8A221A',
+        },
+        coffee: {
+          DEFAULT: '#6B4F3A',
+          soft: '#C9B8A6',
+          wash: '#EFE8DB',
+          deep: '#2A211B',
         },
         // Legacy aliases — keep so existing modals/chat components still compile.
-        cream: '#ECE3D2',
-        'cream-dark': '#D5C8AE',
-        charcoal: '#171513',
-        'charcoal-light': '#3A352E',
-        'charcoal-muted': '#7A7268',
+        cream: '#FFFFFF',
+        'cream-dark': '#E6E0D4',
+        charcoal: '#1C1917',
+        'charcoal-light': '#44403C',
+        'charcoal-muted': '#78716C',
       },
       fontFamily: {
-        sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        serif: ['"Fraunces"', '"EB Garamond"', 'Georgia', 'serif'],
+        sans: ['"Archivo"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['"Instrument Serif"', '"EB Garamond"', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', '"SF Mono"', 'Menlo', 'monospace'],
       },
-      letterSpacing: {
-        widest: '0.22em',
+      borderRadius: {
+        card: '20px',
+        tile: '16px',
       },
       maxWidth: {
-        page: '1280px',
+        page: '1200px',
       },
     },
   },

@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import Header from './components/landing/Header';
+import Hero from './components/landing/Hero';
+import PillarsSection from './components/landing/PillarsSection';
+import ProxyPipelinesSection from './components/landing/ProxyPipelinesSection';
+import AppsSection from './components/landing/AppsSection';
+import SecuritySection from './components/landing/SecuritySection';
+import CompareSection from './components/landing/CompareSection';
+import WatchStrip from './components/landing/WatchStrip';
+import FinalCta from './components/landing/FinalCta';
 import Footer from './components/landing/Footer';
-import YouTubeShowcase from './components/landing/YouTubeShowcase';
-import UseCaseGrid from './components/landing/UseCaseGrid';
-import WorkflowSection from './components/landing/WorkflowSection';
-import ThreePillars from './components/landing/ThreePillars';
-import ArchitectureSection from './components/landing/ArchitectureSection';
-import RulesAsCodeSection from './components/landing/RulesAsCodeSection';
-import RBACSection from './components/landing/RBACSection';
-import ComparisonTable from './components/landing/ComparisonTable';
-import StackReadout from './components/landing/StackReadout';
-import AppCatalogSection from './components/landing/AppCatalogSection';
-import SelfHostCE from './components/landing/SelfHostCE';
-import ConsultingSection from './components/landing/ConsultingSection';
 import { ChatPopup } from './components/ChatPopup';
 import FeedbackModal from './components/FeedbackModal';
 import DeveloperReviewModal from './components/DeveloperReviewModal';
 import ConsultingModal from './components/ConsultingModal';
 import { useReveal } from './hooks/useReveal';
 
+// Variant B — "Product tour". Centered statements, one big product visual,
+// coffee panels alternating with white.
 export default function App() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -42,18 +40,14 @@ export default function App() {
       <Header onEnquire={() => setConsultingSource('header')} />
 
       <main className="flex-1">
-        <YouTubeShowcase />
-        <UseCaseGrid />
-        <WorkflowSection />
-        <ThreePillars />
-        <ArchitectureSection />
-        <RulesAsCodeSection />
-        <RBACSection />
-        <ComparisonTable />
-        <StackReadout />
-        <AppCatalogSection />
-        <SelfHostCE />
-        <ConsultingSection onEnquire={() => setConsultingSource('consulting_section')} />
+        <Hero onEnquire={() => setConsultingSource('hero')} />
+        <PillarsSection />
+        <ProxyPipelinesSection />
+        <AppsSection />
+        <SecuritySection />
+        <CompareSection />
+        <WatchStrip />
+        <FinalCta onEnquire={() => setConsultingSource('final_cta')} />
       </main>
 
       <Footer
