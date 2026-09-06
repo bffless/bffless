@@ -3,12 +3,11 @@ import { trackConversion } from '../../hooks/useAnalytics';
 import { revealDelay } from '../../hooks/useReveal';
 import { LINKS } from '../../content/site';
 
-// Generated figure: the platform as an architecture drawing — an agent over MCP
-// on the left, a workflow across the top, the platform in the middle fanning
-// out to a database, a bucket, and a locked cloud, an edge/TLS bar beneath.
-// Sits on a drafting-grid sheet that fades to plain paper behind the headline.
+// Generated figure in the retro-blueprint house style (the studio app's
+// image-prompts skill, with two tutorial thumbnails as style references): a
+// hand-drawn schematic on parchment — an agent over MCP into the layered
+// platform, a workflow above it, fan-out to Postgres, storage, and an API.
 const HERO_FIGURE = '/images/hero-tour.jpg';
-const HERO_BG = '/images/hero-tour-bg.jpg';
 
 interface HeroProps {
   onEnquire: () => void;
@@ -16,7 +15,6 @@ interface HeroProps {
 
 export default function Hero({ onEnquire }: HeroProps) {
   const figureRef = useRef<HTMLDivElement>(null);
-  const [bgOk, setBgOk] = useState(true);
   const [figureOk, setFigureOk] = useState(true);
 
   // Gentle scroll-linked drift on the figure (max ~20px) for motion-ok users.
@@ -45,19 +43,6 @@ export default function Hero({ onEnquire }: HeroProps) {
 
   return (
     <section id="overview" className="relative scroll-mt-20 overflow-hidden">
-      {bgOk && (
-        <img
-          src={HERO_BG}
-          alt=""
-          aria-hidden="true"
-          onError={() => setBgOk(false)}
-          className="pointer-events-none absolute inset-x-0 bottom-0 w-full h-[78%] object-cover object-bottom opacity-80"
-          style={{
-            maskImage: 'linear-gradient(180deg, transparent 0%, #000 34%)',
-            WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 34%)',
-          }}
-        />
-      )}
       <div className="container-page relative pt-14 md:pt-20 pb-16 md:pb-24 text-center flex flex-col items-center gap-6">
         <span
           className="inline-flex items-center gap-2 rounded-full bg-paper-deep px-3.5 py-1.5 text-[12px] font-semibold text-coffee"
@@ -106,7 +91,7 @@ export default function Hero({ onEnquire }: HeroProps) {
             <div className="rounded-card border border-paper-edge bg-paper shadow-[0_24px_80px_rgba(28,25,23,0.10)] overflow-hidden">
               <img
                 src={HERO_FIGURE}
-                alt="Architecture drawing: an agent connects over MCP to the platform; a workflow runs across the top; the platform fans out to a database, a storage bucket, and a locked cloud, over an edge/TLS layer"
+                alt="Hand-drawn schematic: an agent connects over MCP to the BFFless platform, drawn as a stack of layers (edge, auth, proxy); a workflow runs above it; arrows fan out to Postgres, storage, and an API; a row of boxes reads auth, proxy, pipelines, storage"
                 width={1376}
                 height={768}
                 onError={() => setFigureOk(false)}
@@ -114,12 +99,6 @@ export default function Hero({ onEnquire }: HeroProps) {
                 {...({ fetchpriority: 'high' } as Record<string, string>)}
               />
             </div>
-            <figcaption className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-[12px] font-semibold text-ink-mute">
-              <span>Agents over MCP</span>
-              <span>Workflows</span>
-              <span>Auth · proxy · pipelines</span>
-              <span>Your databases and storage</span>
-            </figcaption>
           </figure>
         )}
       </div>
