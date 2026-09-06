@@ -224,7 +224,7 @@
       transition-delay: var(--reveal-delay, 0ms);
     }
 
-    /* Hero device: rises from below and un-tilts as it settles, then drifts a
+    /* Hero figure: rises from below and un-tilts as it settles, then drifts a
        little with scroll (--drift set by Hero.tsx). */
     .motion-ready [data-hero-device] {
       opacity: 0;
@@ -243,14 +243,5 @@
       transition: none;
     }
 
-    /* Live activity in the admin mock: one pipeline step lights up at a time. */
-    .pulse-dot {
-      animation: pulse-dot 1.6s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 0.35; }
-      50% { opacity: 1; }
-    }
   }
 }
