@@ -1,9 +1,12 @@
+import { trackConversion } from '../../hooks/useAnalytics';
 import { LINKS } from '../../content/site';
 
 interface FooterLink {
   label: string;
   href?: string;
   onClick?: () => void;
+  /** Conversion event to fire on click (kept in parity across A/B arms). */
+  track?: string;
   external?: boolean;
 }
 
@@ -33,7 +36,7 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
         { href: LINKS.docs, label: 'Documentation', external: true },
         { href: LINKS.quickstart, label: 'Quickstart', external: true },
         { href: LINKS.store, label: 'App store', external: true },
-        { href: LINKS.github, label: 'GitHub · CE', external: true },
+        { href: LINKS.github, label: 'GitHub · CE', track: 'github_clicked', external: true },
         { href: LINKS.youtube, label: 'YouTube', external: true },
         { href: LINKS.discord, label: 'Discord' },
       ],
@@ -74,6 +77,7 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
                   {link.href ? (
                     <a
                       href={link.href}
+                      onClick={link.track ? () => trackConversion(link.track!, { source: 'footer' }) : undefined}
                       {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       className="text-[13px] text-ink-label hover:text-ink transition-colors"
                     >
