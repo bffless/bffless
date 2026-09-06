@@ -97,9 +97,20 @@
       function gtag() {
         dataLayer.push(arguments);
       }
+      // A/B test arm. BFFless traffic splitting sets __bffless_variant to the alias
+      // name (landing-production / landing-variant-a / landing-variant-b) on the
+      // HTML response; outside a split there is no cookie and the arm is 'unassigned'.
+      function getVariantCookie() {
+        var match = document.cookie.match(/(?:^|; )__bffless_variant=([^;]*)/);
+        return match ? decodeURIComponent(match[1]) : null;
+      }
+      var landingVariant = getVariantCookie() || 'unassigned';
       gtag('js', new Date());
-
-      gtag('config', 'G-5DLRCRSLFS');
+      // `variant` rides on every event (page_view included) and is also a user
+      // property, so GA4 can report visitors, sessions and key events per arm once
+      // custom dimensions named `variant` (event- and user-scoped) exist in Admin.
+      gtag('set', 'user_properties', { variant: landingVariant });
+      gtag('config', 'G-5DLRCRSLFS', { variant: landingVariant });
     </script>
 
     <!-- Pendo -->
@@ -111,12 +122,6 @@
             y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
             z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
     })('ac90ed1d-7f1c-41e2-a1f8-f9bae4bcd250');
-
-    // Get variant from cookie
-    function getVariantCookie() {
-      var match = document.cookie.match(/(?:^|; )__bffless_variant=([^;]*)/);
-      return match ? decodeURIComponent(match[1]) : null;
-    }
 
     // Initialize Pendo with anonymous visitor and variant metadata
     pendo.initialize({
