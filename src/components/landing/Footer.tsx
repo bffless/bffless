@@ -1,10 +1,10 @@
-import { trackConversion } from '../../hooks/useAnalytics';
+import { LINKS } from '../../content/site';
+
 interface FooterLink {
   label: string;
   href?: string;
   onClick?: () => void;
-  /** Conversion event to fire on click (kept in parity across A/B arms). */
-  track?: string;
+  external?: boolean;
 }
 
 interface FooterProps {
@@ -18,28 +18,30 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
 
   const cols: { label: string; links: FooterLink[] }[] = [
     {
-      label: 'Platform',
+      label: 'On this page',
       links: [
-        { href: '#workflow', label: 'Workflow' },
-        { href: '#platform', label: 'Pillars' },
-        { href: '#architecture', label: 'Architecture' },
-        { href: '#rbac', label: 'RBAC' },
+        { href: '#host', label: '01 · Host' },
+        { href: '#platform', label: '02 · Platform' },
+        { href: '#apps', label: '03 · Apps' },
+        { href: '#security', label: 'Security' },
+        { href: '#compare', label: 'Compare' },
       ],
     },
     {
       label: 'Resources',
       links: [
-        { href: 'https://docs.bffless.app/', label: 'Documentation' },
-        { href: 'https://apps.bffless.dev/', label: 'App store' },
-        { href: 'https://github.com/bffless/ce', label: 'GitHub · CE', track: 'github_clicked' },
-        { href: 'https://docs.bffless.app/getting-started/quickstart/', label: 'Quickstart' },
-        { href: 'https://bffless.dev/discord', label: 'Discord' },
+        { href: LINKS.docs, label: 'Documentation', external: true },
+        { href: LINKS.quickstart, label: 'Quickstart', external: true },
+        { href: LINKS.store, label: 'App store', external: true },
+        { href: LINKS.github, label: 'GitHub · CE', external: true },
+        { href: LINKS.youtube, label: 'YouTube', external: true },
+        { href: LINKS.discord, label: 'Discord' },
       ],
     },
     {
       label: 'Company',
       links: [
-        { onClick: onEnquire, label: 'Hire me to set it up' },
+        { onClick: onEnquire, label: 'Hire me to install it' },
         { onClick: onReview, label: 'Leave a review' },
         { onClick: onFeedback, label: 'Feedback' },
         { href: '/terms.html', label: 'Terms' },
@@ -49,38 +51,39 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
   ];
 
   return (
-    <footer className="border-t rule mt-32">
-      <div className="container-page py-16 grid grid-cols-2 md:grid-cols-5 gap-10">
+    <footer className="border-t border-ink">
+      <div className="container-page py-14 grid grid-cols-2 md:grid-cols-5 gap-10">
         <div className="col-span-2">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-sm border border-ink text-ink font-serif italic text-[17px] leading-none">
-              b
-            </span>
-            <span className="font-semibold tracking-tight text-ink">BFFless</span>
+          <div className="flex items-center gap-2.5 mb-5">
+            <span className="h-2.5 w-2.5 rounded-full bg-terracotta" aria-hidden="true" />
+            <span className="font-bold tracking-tight text-ink">BFFless</span>
           </div>
-          <p className="text-sm text-ink-soft max-w-sm leading-relaxed">
-            The open-source static-hosting platform with a BFF server in front of it. Self-host with one <code className="font-mono text-ink">docker compose up</code>. Same git push → live URL flow as GitHub Pages — with the auth, proxy and pipelines GH Pages doesn't ship.
+          <p className="text-[14px] text-ink-soft max-w-sm leading-[1.55]">
+            The self-hosted home for AI-generated apps, internal tools, and HTML docs — with login, a backend, and
+            a path to your internal services in front of every static build.
           </p>
-          <p className="meta-label mt-8">N°-01 · Community Edition · Source-available</p>
+          <p className="meta-label mt-7">Community Edition · Source-available</p>
         </div>
 
         {cols.map((col) => (
           <div key={col.label}>
             <p className="meta-label mb-4">{col.label}</p>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {col.links.map((link) => (
                 <li key={link.label}>
                   {link.href ? (
                     <a
                       href={link.href}
-                      onClick={link.track ? () => trackConversion(link.track!, { source: 'footer' }) : undefined}
-                      className="text-[13px] text-ink-soft hover:text-ink transition-colors">
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="text-[13px] text-ink-label hover:text-ink transition-colors"
+                    >
                       {link.label}
                     </a>
                   ) : (
                     <button
+                      type="button"
                       onClick={link.onClick}
-                      className="text-[13px] text-ink-soft hover:text-ink transition-colors text-left"
+                      className="text-[13px] text-ink-label hover:text-ink transition-colors text-left"
                     >
                       {link.label}
                     </button>
@@ -93,9 +96,9 @@ export default function Footer({ onFeedback, onReview, onEnquire }: FooterProps)
       </div>
 
       <div className="border-t rule">
-        <div className="container-page py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="meta-label">© {year} BFFless · Atlanta, GA</p>
-          <p className="meta-label">Built with the platform · self-hosted · v1</p>
+        <div className="container-page py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <p className="meta-label !text-ink-mute">© {year} BFFless, LLC</p>
+          <p className="meta-label !text-ink-mute">Built on the platform · self-hosted · docker compose up</p>
         </div>
       </div>
     </footer>
