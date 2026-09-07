@@ -26,16 +26,17 @@ export default function CompareSection() {
             GitHub Pages, Vercel and Cloudflare Pages each solve a slice. None gives you SSO, a proxy to your
             private API, and self-host in the same product.
           </p>
-          <dl className="mt-8 hidden lg:grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-[12px] font-mono" data-reveal>
-            <dt className="meta-label !text-ink-mute pt-0.5">Stack</dt>
-            <dd className="text-ink-label leading-[1.6]">
+          <div className="mt-8 hidden lg:block" data-reveal>
+            <p className="meta-label !text-ink-mute mb-3">Stack</p>
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1.5 text-[12px] font-mono leading-[1.5]">
               {stack.map((s) => (
-                <span key={s.layer} className="block">
-                  <span className="text-ink">{s.layer}</span> · {s.value}
-                </span>
+                <div key={s.layer} className="contents">
+                  <dt className="text-ink">{s.layer}</dt>
+                  <dd className="text-ink-label">{s.value}</dd>
+                </div>
               ))}
-            </dd>
-          </dl>
+            </dl>
+          </div>
         </SectionHead>
 
         <div data-reveal className="min-w-0">

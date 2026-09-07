@@ -12,13 +12,14 @@ export default function ShipsWithSection() {
             eyebrow="03 · Ships with it"
             title={
               <>
-                Five apps and a set of MCP servers. <span className="display-em">One click each.</span>
+                Apps built on it, and a set of MCP servers. <span className="display-em">One click each.</span>
               </>
             }
           />
           <p className="text-[16px] leading-[1.55] text-ink-soft max-w-[560px] self-end text-pretty" data-reveal>
-            Each app is a static frontend plus a reviewable pipeline rule set — the same primitives you'd use for
-            your own tools. Every one runs on your instance, not someone else's server.
+            A growing set of apps, each one a worked example of building on BFFless: a static frontend plus a
+            reviewable pipeline rule set, the same primitives you'd use for your own tools. Every one runs on your
+            instance, not someone else's server.
           </p>
         </div>
 
