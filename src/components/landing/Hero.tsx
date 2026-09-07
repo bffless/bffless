@@ -4,7 +4,7 @@ import { revealDelay } from '../../hooks/useReveal';
 import { LINKS } from '../../content/site';
 import HeroIllustration from './HeroIllustration';
 
-const proofs = ['SSO + RBAC', 'Reverse proxy', 'No-code pipelines', 'MCP servers', '5 apps'];
+const proofs = ['SSO + RBAC', 'Reverse proxy', 'No-code pipelines', 'MCP servers', 'Ready-made apps'];
 
 interface HeroProps {
   onEnquire: () => void;

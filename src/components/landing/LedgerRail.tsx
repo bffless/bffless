@@ -21,7 +21,7 @@ export default function LedgerRail() {
           >
             <a
               href={`#${item.id}`}
-              className="block h-full py-5 md:py-6 px-4 lg:px-5 first:lg:pl-0 transition-colors hover:bg-paper-deep/60"
+              className="block h-full py-5 md:py-6 px-4 lg:px-5 transition-colors hover:bg-paper-deep/60"
             >
               <span className="block meta-label mb-2.5 !text-coffee">{item.n}</span>
               <span className="block font-semibold text-[15px] text-ink leading-tight">

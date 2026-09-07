@@ -16,7 +16,7 @@ export const LINKS = {
 export const ledger = [
   { n: '01', id: 'host', title: 'What you can host', sub: 'Apps, docs, reports, Storybooks.' },
   { n: '02', id: 'platform', title: 'What it adds', sub: 'Auth, a proxy, pipelines, storage.' },
-  { n: '03', id: 'apps', title: 'What ships with it', sub: 'Five apps and MCP servers.' },
+  { n: '03', id: 'apps', title: 'What ships with it', sub: 'Ready-made apps and MCP servers.' },
   { n: '04', id: 'install', title: 'Who runs it', sub: 'You do. Or I set it up for you.' },
 ] as const;
 
