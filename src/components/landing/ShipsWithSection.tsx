@@ -57,6 +57,17 @@ export default function ShipsWithSection() {
                 </span>
                 <span className="block text-[13px] text-ink-mute mt-1 leading-[1.5]">{app.summary}</span>
               </a>
+              {app.liveHref && (
+                <a
+                  href={app.liveHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackConversion('app_live_demo_clicked', { app: app.id, source: 'ships_with' })}
+                  className="-mt-1.5 font-mono text-[11px] tracking-[0.02em] text-ink-mute hover:text-coffee transition-colors self-start"
+                >
+                  Live example: {app.liveLabel ?? app.liveHref} ↗
+                </a>
+              )}
             </li>
           ))}
         </ul>

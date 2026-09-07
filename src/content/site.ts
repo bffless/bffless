@@ -104,6 +104,8 @@ export type CatalogApp = {
   isNew?: boolean;
   summary: string;
   href: string;
+  liveHref?: string;
+  liveLabel?: string;
   image: string;
 };
 
@@ -137,7 +139,9 @@ export const apps: CatalogApp[] = [
     name: 'Recall',
     tag: 'Search',
     summary: 'Semantic search and RAG chat over your video library. Answers deep-link to the second.',
-    href: 'https://recall.bffless.dev/',
+    href: 'https://apps.bffless.dev/apps/recall/',
+    liveHref: 'https://recall.bffless.dev/',
+    liveLabel: 'recall.bffless.dev',
     image: '/images/apps/recall.png',
   },
   {
