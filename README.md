@@ -69,3 +69,15 @@ place.
 — synced with `prune: true`, so **git is the source of truth: a rule deleted here is deleted
 live**. Pruning only ever removes rules within the set being synced; pipeline schemas resolve
 by name and are never deleted, so record data is untouched.
+
+## Landing A/B variant
+
+This branch is one arm of the landing-page A/B test. `main` is the control
+(`landing-production`); each `variant/*` branch carries the redesign applied directly and
+its own `.github/workflows/variant.yml`, which deploys every push to that branch's alias
+(`landing-variant-a` for the editorial ledger, `landing-variant-b` for the product tour) with
+the production rule sets attached. The variant workflow never syncs rules — `main` owns them.
+
+Traffic between the three aliases is split by BFFless traffic splitting on the `bffless.dev`
+domain (sticky sessions, 24 h); the `__bffless_variant` cookie it sets is what `useAnalytics`
+forwards to Pendo and GA on every conversion event, so results segment by alias name.

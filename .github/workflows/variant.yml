@@ -1,0 +1,62 @@
+name: Deploy landing variant
+
+# This branch is one arm of the landing-page A/B test. Every push deploys it to
+# its own alias on the bffless/bffless.app project, with the PRODUCTION rule
+# sets attached (the same two `landing-production` serves), so the variant is a
+# drop-in for the live site. BFFless traffic splitting on bffless.dev decides
+# how many visitors see it; nothing here changes weights.
+#
+# Rule sets are owned by `main` (build.yml syncs them with prune). This workflow
+# deliberately does not sync rules, so a variant branch can never delete a
+# live rule.
+
+on:
+  push:
+    branches: ['variant/a-editorial-ledger']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: variant-a
+  cancel-in-progress: true
+
+jobs:
+  build-and-upload:
+    name: Build & Upload · variant A
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build landing site
+        run: pnpm build
+
+      - name: Upload variant
+        uses: bffless/upload-artifact@v1
+        with:
+          path: dist
+          api-url: ${{ vars.LANDING_ASSET_HOST_URL }}
+          api-key: ${{ secrets.LANDING_ASSET_HOST_KEY }}
+          # See build.yml: the BFFless project is still bffless/bffless.app.
+          repository: bffless/bffless.app
+          alias: landing-variant-a
+          proxy-rule-set-names: landing-episodes,landing-page-pipeline
+          description: 'Landing variant A (editorial ledger) from ${{ github.ref_name }}'
+          summary-title: Landing Variant A

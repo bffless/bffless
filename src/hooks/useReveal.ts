@@ -5,6 +5,8 @@ import type { CSSProperties } from 'react';
 export const revealDelay = (ms: number): CSSProperties =>
   ({ '--reveal-delay': `${ms}ms` }) as CSSProperties;
 
+const SELECTOR = '[data-reveal], [data-reveal-rule]';
+
 /**
  * Page-wide entrance choreography.
  *
@@ -14,9 +16,10 @@ export const revealDelay = (ms: number): CSSProperties =>
  * inside a `prefers-reduced-motion: no-preference` block in CSS), so no-JS,
  * reduced-motion, and headless renders always see the real content.
  *
- * We observe targets and reveal each as it scrolls into view, with a failsafe
- * that unhides anything that never intersected (e.g. tall viewports, odd
- * layouts) so content can never get stuck hidden.
+ * Targets are revealed as they scroll into view. Elements that mount later
+ * (anything rendered after a fetch) are picked up by a MutationObserver, and a
+ * per-element failsafe unhides anything that never intersected so content can
+ * never get stuck hidden.
  */
 export function useReveal() {
   useEffect(() => {
@@ -31,18 +34,15 @@ export function useReveal() {
     // Ensure the flag is set even if the pre-paint inline script didn't run.
     root.classList.add('motion-ready');
 
-    const targets = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-rule]'),
-    );
-
     const reveal = (el: Element) => el.classList.add('is-in');
+    const timers = new Set<number>();
 
     if (!('IntersectionObserver' in window)) {
-      targets.forEach(reveal);
+      document.querySelectorAll(SELECTOR).forEach(reveal);
       return;
     }
 
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries, obs) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
@@ -54,14 +54,35 @@ export function useReveal() {
       { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
     );
 
-    targets.forEach((el) => observer.observe(el));
+    const track = (el: Element) => {
+      if (el.classList.contains('is-in')) return;
+      io.observe(el);
+      // Failsafe: reveal anything still hidden a beat after it appeared.
+      const t = window.setTimeout(() => {
+        reveal(el);
+        io.unobserve(el);
+        timers.delete(t);
+      }, 2500);
+      timers.add(t);
+    };
 
-    // Failsafe: reveal anything still hidden shortly after load.
-    const failsafe = window.setTimeout(() => targets.forEach(reveal), 2500);
+    document.querySelectorAll(SELECTOR).forEach(track);
+
+    const mo = new MutationObserver((records) => {
+      for (const r of records) {
+        r.addedNodes.forEach((n) => {
+          if (!(n instanceof Element)) return;
+          if (n.matches(SELECTOR)) track(n);
+          n.querySelectorAll(SELECTOR).forEach(track);
+        });
+      }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      observer.disconnect();
-      window.clearTimeout(failsafe);
+      io.disconnect();
+      mo.disconnect();
+      timers.forEach((t) => window.clearTimeout(t));
     };
   }, []);
 }

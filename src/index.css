@@ -14,20 +14,22 @@
     font-family: theme('fontFamily.sans');
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'cv11';
   }
 
   body {
     background-color: theme('colors.paper.DEFAULT');
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(23, 21, 19, 0.06) 1px, transparent 0);
-    background-size: 28px 28px;
-    background-position: 0 0;
     color: theme('colors.ink.DEFAULT');
   }
 
   ::selection {
     background-color: theme('colors.terracotta.DEFAULT');
-    color: theme('colors.paper.DEFAULT');
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.ink.DEFAULT');
+    outline-offset: 3px;
   }
 }
 
@@ -40,54 +42,118 @@
     padding-right: 1.5rem;
   }
 
+  @media (min-width: 768px) {
+    .container-page {
+      padding-left: 3.5rem;
+      padding-right: 3.5rem;
+    }
+  }
+
   .rule {
     border-color: theme('colors.paper.line');
   }
 
+  /* Coffee mono eyebrow. 11px on white paper ≈ 7:1 against #6B4F3A. */
   .meta-label {
     font-family: theme('fontFamily.mono');
-    font-size: 10px;
+    font-size: 11px;
     line-height: 1;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: theme('colors.ink.label');
+    color: theme('colors.coffee.DEFAULT');
+  }
+
+  /* The italic display word: Instrument Serif, coffee, regular weight. */
+  .display-em {
+    font-family: theme('fontFamily.serif');
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: theme('colors.coffee.DEFAULT');
   }
 
   .pill-cta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
-    padding: 0.85rem 1.4rem;
+    padding: 0.9rem 1.4rem;
     border-radius: 999px;
     background: theme('colors.terracotta.DEFAULT');
-    color: theme('colors.paper.DEFAULT');
+    color: #fff;
     font-weight: 600;
-    font-size: 0.875rem;
-    letter-spacing: 0.01em;
-    transition: background-color 150ms ease;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    letter-spacing: 0.005em;
+    transition: background-color 150ms ease, transform 150ms ease;
   }
 
   .pill-cta:hover {
     background: theme('colors.terracotta.hover');
   }
 
+  .pill-cta:active {
+    transform: translateY(1px);
+  }
+
   .pill-ghost {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
-    padding: 0.85rem 1.4rem;
+    padding: 0.9rem 1.4rem;
     border-radius: 999px;
-    border: 1px solid theme('colors.ink.DEFAULT');
+    border: 1px solid theme('colors.paper.edge');
     color: theme('colors.ink.DEFAULT');
-    font-weight: 600;
-    font-size: 0.875rem;
-    letter-spacing: 0.01em;
-    transition: background-color 150ms ease, color 150ms ease;
+    background: transparent;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
   }
 
   .pill-ghost:hover {
+    border-color: theme('colors.ink.DEFAULT');
     background: theme('colors.ink.DEFAULT');
     color: theme('colors.paper.DEFAULT');
+  }
+
+  .pill-ink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.4rem;
+    border-radius: 999px;
+    background: theme('colors.ink.DEFAULT');
+    color: theme('colors.paper.DEFAULT');
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    transition: background-color 150ms ease;
+  }
+
+  .pill-ink:hover {
+    background: theme('colors.ink.soft');
+  }
+
+  /* Inline code in running copy. */
+  .code-chip {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.85em;
+    background: theme('colors.paper.deep');
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    color: theme('colors.ink.DEFAULT');
+  }
+
+  /* Legacy — kept so modal/chat components still render. */
+  .glass-card {
+    @apply bg-paper rounded-sm shadow-xl border border-paper-line;
+  }
+
+  .participant-node {
+    @apply px-4 py-3 rounded-sm font-mono text-sm font-medium transition-all duration-300;
   }
 
   .corner-marks::before,
@@ -111,15 +177,6 @@
     right: 0;
     border-left: 0;
     border-top: 0;
-  }
-
-  /* Legacy — kept so modal/chat components still render. */
-  .glass-card {
-    @apply bg-paper-deep/70 backdrop-blur-lg rounded-sm shadow-xl border border-paper-line;
-  }
-
-  .participant-node {
-    @apply px-4 py-3 rounded-sm font-mono text-sm font-medium transition-all duration-300;
   }
 }
 
@@ -171,19 +228,19 @@
   @media (prefers-reduced-motion: no-preference) {
     .motion-ready [data-reveal] {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(18px);
     }
 
     .motion-ready [data-reveal].is-in {
       opacity: 1;
       transform: none;
       transition:
-        opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       transition-delay: var(--reveal-delay, 0ms);
     }
 
-    /* A thin terracotta wipe that draws itself in under a revealed heading. */
+    /* A thin rule that draws itself in from the left. */
     .motion-ready [data-reveal-rule] {
       transform: scaleX(0);
       transform-origin: left;
@@ -191,8 +248,27 @@
 
     .motion-ready [data-reveal-rule].is-in {
       transform: scaleX(1);
-      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
       transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    /* Hero figure: a slow settle, plus a gentle scroll-linked drift
+       (set as --drift by Hero.tsx) so the page feels layered, not flat. */
+    .motion-ready [data-hero-figure] {
+      opacity: 0;
+      transform: translateY(24px) scale(0.985);
+    }
+
+    .motion-ready [data-hero-figure].is-in {
+      opacity: 1;
+      transform: translateY(var(--drift, 0px)) scale(1);
+      transition:
+        opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+        transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 120ms;
+    }
+
+    .motion-ready [data-hero-figure].is-in.is-settled {
+      transition: none;
     }
   }
 }
