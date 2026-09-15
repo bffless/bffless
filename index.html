@@ -90,31 +90,64 @@
     }
     </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5DLRCRSLFS"></script>
+    <!-- Analytics gate -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      // Only load analytics on the canonical public hostnames.
+      //
+      // BFFless preview deploys are served from <sha>-<app>-<hash>.bffless.dev
+      // and were firing page_view AND conversion events into the production
+      // property (~29% of recent sessions), inflating traffic and corrupting
+      // get_started_clicked / github_clicked counts.
+      //
+      // A/B traffic splitting serves every arm from the apex and signals the
+      // arm via the __bffless_variant cookie, so gating on hostname does NOT
+      // affect the split. localhost and preview hosts simply stay untracked.
+      var ANALYTICS_HOSTS = [
+        'bffless.dev', 'www.bffless.dev',
+        'bffless.app', 'www.bffless.app',
+        'bffless.com', 'www.bffless.com'
+      ];
+      window.__ANALYTICS_ENABLED =
+        ANALYTICS_HOSTS.indexOf(window.location.hostname) !== -1;
+
       // A/B test arm. BFFless traffic splitting sets __bffless_variant to the alias
       // name (landing-production / landing-variant-a / landing-variant-b) on the
       // HTML response; outside a split there is no cookie and the arm is 'unassigned'.
+      // Defined unconditionally: the Pendo block below also calls it.
       function getVariantCookie() {
         var match = document.cookie.match(/(?:^|; )__bffless_variant=([^;]*)/);
         return match ? decodeURIComponent(match[1]) : null;
       }
-      var landingVariant = getVariantCookie() || 'unassigned';
-      gtag('js', new Date());
-      // `variant` rides on every event (page_view included) and is also a user
-      // property, so GA4 can report visitors, sessions and key events per arm once
-      // custom dimensions named `variant` (event- and user-scoped) exist in Admin.
-      gtag('set', 'user_properties', { variant: landingVariant });
-      gtag('config', 'G-5DLRCRSLFS', { variant: landingVariant });
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+      // gtag() is always defined so callers never have to null-check it. When
+      // analytics is disabled the calls just queue in dataLayer and go nowhere.
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      if (window.__ANALYTICS_ENABLED) {
+        var gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-5DLRCRSLFS';
+        document.head.appendChild(gaScript);
+
+        var landingVariant = getVariantCookie() || 'unassigned';
+        gtag('js', new Date());
+        // `variant` rides on every event (page_view included) and is also a user
+        // property, so GA4 can report visitors, sessions and key events per arm once
+        // custom dimensions named `variant` (event- and user-scoped) exist in Admin.
+        gtag('set', 'user_properties', { variant: landingVariant });
+        gtag('config', 'G-5DLRCRSLFS', { variant: landingVariant });
+      }
     </script>
 
     <!-- Pendo -->
     <script>
+    if (window.__ANALYTICS_ENABLED) {
     (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
         v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
@@ -137,6 +170,7 @@
         id: window.location.hostname
       }
     });
+    }
     </script>
   </head>
   <body style="background-color: #FCFBF8; color: #1C1917;">
