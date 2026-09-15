@@ -59,9 +59,18 @@ export function trackConversion(
     console.warn('[Analytics] Pendo not loaded, event not sent:', eventName);
   }
 
-  // Fire Google Analytics event if gtag is loaded
+  // Fire Google Analytics event if gtag is loaded.
+  // GA4 reserves 'source', 'medium', 'campaign', 'content', 'term' as session
+  // attribution keys — passing them as custom event params overwrites the session
+  // source/medium and pollutes channel reporting. Rename 'source' → 'cta_source'
+  // before sending to GA4 only (Pendo receives the original key unchanged).
   if (window.gtag) {
-    window.gtag('event', eventName, metadata);
+    const ga4Metadata: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(metadata)) {
+      const reserved = ['source', 'medium', 'campaign', 'content', 'term'];
+      ga4Metadata[reserved.includes(k) ? `cta_${k}` : k] = v;
+    }
+    window.gtag('event', eventName, ga4Metadata);
   } else {
     console.warn('[Analytics] gtag not loaded, event not sent:', eventName);
   }
